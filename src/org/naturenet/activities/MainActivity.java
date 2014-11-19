@@ -3,10 +3,7 @@ package org.naturenet.activities;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
 import org.naturenet.fragments.ActivityFragment;
 import org.naturenet.fragments.AddObservationFragment;
 import org.naturenet.fragments.HomeFragment;
@@ -15,17 +12,11 @@ import org.naturenet.fragments.ObservationFragment.NoteImage;
 import org.naturenet.fragments.TourFragment;
 import org.naturenet.fragments.ObservationFragment;
 import org.naturenet.helper.InitialDownloadTask;
-import org.naturenet.model.Note;
 import org.naturenet.model.Session;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,15 +28,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements HomeFragment.OnPassAccount,
 	ObservationFragment.OnDataPassListener, TourFragment.OnDataPassListener,
 	ActivitiesFragment.onActivityPassListener, ActivityFragment.OnActivityIdPassListener,
 	AddObservationFragment.onPassNewObservationListener,
 	FragmentManager.OnBackStackChangedListener {
-    private ActionBar actionBar;
-    private Menu abMenu;
+    private Menu actionbarMenu;
     
     public final String APP_TAG = "NatureNet";
     private String mCurrentPhotoPath;
@@ -64,7 +53,6 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
-	actionBar = getActionBar();
 	fragmentManager = getSupportFragmentManager();
 	fragmentManager.addOnBackStackChangedListener(this);
 	if (savedInstanceState == null) {
@@ -73,12 +61,12 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 	    task.execute((Void) null);
 	}
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	// Inflate the menu; this adds items to the action bar if it is present.
+	this.actionbarMenu = menu;
 	getMenuInflater().inflate(R.menu.main, menu);
-	this.abMenu = menu;
 	if (Session.isSignedIn()) {
 	    menu.findItem(R.id.action_settings).setTitle(SIGNOUT);
 	}
@@ -96,7 +84,8 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 		    showLogOutAlert();
 		    item.setTitle(SIGNIN);
 		} else {
-		    HomeFragment hFragment = (HomeFragment) fragmentManager.findFragmentByTag(HomeFragment.TAG);
+		    HomeFragment hFragment = (HomeFragment) fragmentManager
+			    	.findFragmentByTag(HomeFragment.TAG);
 		    hFragment.onClickSingIn();
 		}
 		return true;
@@ -107,14 +96,18 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     
     /* change settings title */
     public void setOptionTitle(int id, String title) {
-        MenuItem item = abMenu.findItem(id);
-        item.setTitle(title);
+	if (actionbarMenu != null) {
+	    MenuItem item = actionbarMenu.findItem(id);
+	    item.setTitle(title);
+	}
     }
 
     @Override
     public void onBackPressed() {	
-	HomeFragment homeFragment = (HomeFragment) fragmentManager.findFragmentByTag(HomeFragment.TAG);
-	ObservationFragment obsFragment = (ObservationFragment) fragmentManager.findFragmentByTag(ObservationFragment.TAG);
+	HomeFragment homeFragment = (HomeFragment) fragmentManager
+				.findFragmentByTag(HomeFragment.TAG);
+	ObservationFragment obsFragment = (ObservationFragment) fragmentManager
+				.findFragmentByTag(ObservationFragment.TAG);
 	if (homeFragment != null && homeFragment.isVisible()) {
 	    if (Session.isSignedIn()) {
 		showLogOutAlert();
@@ -161,7 +154,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 	alertDialog.show();
     }
     
-    /* Replace this fragment with next fragment*/
+    /* Replace this fragment with next fragment */
     public void replaceFragment(Fragment fragment, int fragmentid, String tag) {
 	FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 	transaction.replace(fragmentid, fragment, tag);
@@ -212,7 +205,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 
     @Override
     public void onPassActivityName(String name) {
-	Log.d("debug", "acitivty Id selected in MainActivity: " + name);
+	// Log.d("debug", "acitivty Id selected in MainActivity: " + name);
 	this.selectActivity = name;
     }
 
@@ -233,7 +226,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     }
     
     /* Receiving data from AddObservationFragment, 
-     * going to update the state of one image in observation fragment */
+       going to update the state of one image in observation fragment */
     @Override
     public void onObservationStateChange(NoteImage image) {
 	ObservationFragment obsFragment = (ObservationFragment) getSupportFragmentManager()
@@ -275,8 +268,10 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     @Override
     public void onStop() {
 	super.onStop();
+	Session.signOut();
     }
     
+    /* dispatch camera intent */
     public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent

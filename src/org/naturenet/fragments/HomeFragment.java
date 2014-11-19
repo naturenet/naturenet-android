@@ -51,9 +51,10 @@ public class HomeFragment extends Fragment {
     private TextView tvWelcome;
     private ActionBar actionBar;
     
-    public static final int REQUEST_SELECT_ACCOUNT = 6;
     private Account account;
-    public OnPassAccount passer;
+    public OnPassAccount passer;    
+    
+    public static final int REQUEST_SELECT_ACCOUNT = 6;
     final public static String TAG = HomeFragment.class.getName();
 
     public static HomeFragment newInstance() {
@@ -62,7 +63,6 @@ public class HomeFragment extends Fragment {
     }
 
     public static HomeFragment newInstance(HomeFragmentListener listener) {
-	// homeFragmentListener = listener;
 	return new HomeFragment();
     }
     
@@ -76,7 +76,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	actionBar = getActivity().getActionBar();
 	setHasOptionsMenu(true);
-	
 	rootView = inflater.inflate(R.layout.fragment_home, container, false);
 	tvWelcome = (TextView) rootView.findViewById(R.id.textView_signin);
 	btnSign = (Button) rootView.findViewById(R.id.btn_sign_in);
@@ -130,14 +129,13 @@ public class HomeFragment extends Fragment {
 	    showWelcome();
 	}
 	setSigninBtn();
-	setWelcomOnClick();
+//	setWelcomOnClick();
 	return rootView;
     }
     
     @Override
     public void onResume() {
         super.onResume();
-        // Set title
         getActivity().getActionBar()
             .setTitle(R.string.title_fragment_home);
 	getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -161,9 +159,6 @@ public class HomeFragment extends Fragment {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-	// Handle action bar item clicks here. The action bar will
-	// automatically handle clicks on the Home/Up button, so long
-	// as you specify a parent activity in AndroidManifest.xml.
 	switch (item.getItemId()) {
 	    case android.R.id.home:
 		actionBar.setDisplayHomeAsUpEnabled(false);
@@ -227,7 +222,7 @@ public class HomeFragment extends Fragment {
 	}
     }
     
-    // show welcome message after a user signs in
+    /* show welcome message after a user signs in */
     private void showWelcome() {
 	btnSign.setVisibility(View.GONE);
 	tvWelcome.setVisibility(View.VISIBLE);
@@ -240,7 +235,7 @@ public class HomeFragment extends Fragment {
 	((MainActivity) getActivity()).setOptionTitle(R.id.action_settings, MainActivity.SIGNOUT);
     }
     
-    // show signin button after a user logs out
+    /* show signin button after a user logs out */
     public void showSignInBtn() {
 	tvWelcome.setVisibility(View.GONE);
 	btnSign.setVisibility(View.VISIBLE);

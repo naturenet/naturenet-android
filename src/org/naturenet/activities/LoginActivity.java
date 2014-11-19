@@ -51,8 +51,7 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	    LoginMainFragment firstFragment = new LoginMainFragment();
 
 	    // In case this activity was started with special instructions from
-	    // an
-	    // Intent, pass the Intent's extras to the fragment as arguments
+	    // an Intent, pass the Intent's extras to the fragment as arguments
 	    firstFragment.setArguments(getIntent().getExtras());
 
 	    // Add the fragment to the 'fragment_container' FrameLayout
@@ -64,11 +63,11 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	super.onCreateOptionsMenu(menu);
-	getMenuInflater().inflate(R.menu.login, menu);
+	// getMenuInflater().inflate(R.menu.login, menu);
 	return true;
     }
 
-    // click app logo, goes home
+    /* click app logo, go home */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {
@@ -80,7 +79,14 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	    return super.onOptionsItemSelected(item);
 	}
     }
-
+    
+    @Override
+    public void onAccountPass(Long account_id) {
+	Intent i = new Intent();
+	i.putExtra(RESULT_KEY_LOGIN, account_id);
+	setResult(Activity.RESULT_OK, i);
+    }
+    
     /**
      * ActionBar's title changes based on the fragment
      */
@@ -100,15 +106,7 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	// Commit the transaction
 	transaction.commit();
     }
-    
-    @Override
-    public void onAccountPass(Long account_id) {
-//	account = Model.load(Account.class,  account_id);
-//	checkNotNull(account);
-	Intent i = new Intent();
-	i.putExtra(RESULT_KEY_LOGIN, account_id);
-	setResult(Activity.RESULT_OK, i);
-    }
+
 
     @Override
     public void onDataPass(String consentText) {
