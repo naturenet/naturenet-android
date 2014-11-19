@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.naturenet.activities"
+    android:versionCode="1"
+    android:versionName="1.0" >
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="19" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera" />
+
+    <permission
+        android:name="org.naturenet.activities.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="org.naturenet.activities.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <!-- The following two permissions are not required to use Google Maps Android API v2, but are recommended. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<!--  adjust the name property of your application node -->
+    <application
+        android:name="com.activeandroid.app.Application"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <!-- add the following metadata for version and database name -->
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="RestClient.db" />
+       <!--  <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="1" /> -->
+        <activity
+            android:name="org.naturenet.activities.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.naturenet.activities.LoginActivity"
+            android:parentActivityName="org.naturenet.activities.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.naturenet.activities.MainActivity" />
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAp50sEYDWQTcpN9MOj_w0we3yFPL22ctY" />
+    
+        <activity
+            android:name="org.naturenet.activities.EditObservationActivity"
+            android:label="@string/title_activity_edit_observation"
+            android:parentActivityName="org.naturenet.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.naturenet.activities.MainActivity" />
+        </activity>
+        
+        <!-- Receive Wi-Fi connection state changes -->
+		<receiver android:name="org.naturenet.helper.WifiReceiver" >
+    		<intent-filter>
+        		<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+    		</intent-filter>
+		</receiver>
+        
+    </application>
+    
+    <!-- <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="org.naturenet.activities.LoginActivity"
+            android:parentActivityName="org.naturenet.activities.MainActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+
+            Parent activity meta-data to support 4.0 and lower
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.naturenet.activities.MainActivity" />
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyAp50sEYDWQTcpN9MOj_w0we3yFPL22ctY" />
+  
+    
+        <activity
+            android:name="org.naturenet.activities.EditObservationActivity"
+            android:label="@string/title_activity_edit_observation"
+            android:parentActivityName="org.naturenet.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.naturenet.activities.MainActivity" />
+        </activity>
+       
+    </application> -->
+
+</manifest>

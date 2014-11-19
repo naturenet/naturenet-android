@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/observation_about"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="About"
+        android:textSize="20dp" />
+ 
+     <ImageView
+          android:id="@+id/cam_in_activity"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+   	      android:layout_above="@+id/textView_in_act"
+          android:layout_marginTop="5dp"
+          android:gravity="center"
+          android:src="@drawable/camera" />
+
+   	 <TextView
+   	     android:id="@+id/textView_in_act"
+   	     android:layout_width="match_parent"
+   	     android:layout_height="wrap_content"
+   	     android:layout_alignParentBottom="true"
+          android:padding="1dp"
+   	     android:gravity="center"
+   	     android:layout_marginBottom="5dp"
+   	     android:text="Take a new observation in this activity" />
+</RelativeLayout>

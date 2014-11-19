@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:paddingLeft="5dp"	
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"        	
+    	android:layout_marginTop="5dp"
+        android:background="#BABABA">
+
+        <TextView
+            android:id="@+id/textview_activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="title"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <!-- <TextView
+            android:id="@+id/textview_activities_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:text="10"
+            android:textAppearance="?android:attr/textAppearanceLarge" /> -->
+
+    	<ImageView
+    	    android:id="@+id/imageView_activity_next"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignParentRight="true"
+    	    android:layout_alignTop="@+id/textview_activity_title"
+    	    android:layout_alignBottom ="@+id/textview_activity_title"
+    	    android:src="@drawable/next" />
+        
+    </RelativeLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,141 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+<RelativeLayout 
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:orientation="vertical"
+    android:id="@+id/rlayout_add_obs"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
+
+    <ImageView
+        android:id="@+id/preview_observation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/activity" />
+    
+    <View
+        android:id="@+id/view1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+       
+        android:layout_below="@+id/preview_observation"
+        android:layout_marginTop="10dp"
+        android:background="#878787" />
+
+    <TextView
+        android:id="@+id/obs_description_tile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/view1"
+        android:layout_below="@+id/view1"
+        android:layout_marginTop="5dp"
+        android:text="Description"
+        android:textStyle="bold" />
+    
+    <EditText
+        android:id="@+id/et_edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/obs_description_tile"
+        android:layout_below="@+id/obs_description_tile"
+        android:ems="14"
+        android:hint="@string/add_description"
+        android:inputType="textMultiLine" />
+    
+
+    <!-- <org.naturenet.views.MultiLineEditText
+        android:id="@+id/et_edit_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/obs_description_tile"
+        android:layout_below="@+id/obs_description_tile"
+        android:ems="14"
+        android:hint="@string/add_description"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine" /> -->
+
+    <TextView
+        android:id="@+id/obs_location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/et_edit_description"
+        android:layout_below="@+id/et_edit_description"
+        android:layout_marginTop="5dp"
+        android:text="Location"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinner_obs_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/obs_location_title"
+        android:layout_below="@+id/obs_location_title" />
+
+ 
+	<!-- once the category is ready uncomment this -->
+<!--     <TextView
+        android:id="@+id/obs_category_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinner_obs_location"
+        android:layout_below="@+id/spinner_obs_location"
+        android:layout_marginTop="5dp"
+        android:text="Category"
+        android:textStyle="bold" /> -->
+
+    <!-- <Spinner
+        android:id="@+id/spinner_obs_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/obs_category_title"
+        android:layout_below="@+id/obs_category_title" /> -->
+
+
+    
+     <TextView
+        android:id="@+id/obs_activity_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/spinner_obs_location"
+        android:layout_below="@+id/spinner_obs_location"
+        android:layout_marginTop="5dp"
+        android:text="Activity"
+        android:textStyle="bold" />
+
+    <Spinner
+        android:id="@+id/spinner_obs_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/obs_activity_title"
+        android:layout_below="@+id/obs_activity_title" />
+
+
+
+    <Button
+        android:id="@+id/btn_addObs_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/spinner_obs_activity"
+        android:layout_below="@+id/spinner_obs_activity"
+        android:layout_marginTop="5dp"
+        android:text="@string/submit" />
+
+    <Button
+        android:id="@+id/btn_addObs_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btn_addObs_submit"
+        android:layout_alignBottom="@+id/btn_addObs_submit"
+        android:layout_alignLeft="@+id/spinner_obs_activity"
+        android:text="Cancel" />
+
+</RelativeLayout>
+
+</ScrollView>

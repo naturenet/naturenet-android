@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="locations">
+        <item>1. Hub of Activities</item>
+        <item>2. Golden Eagle</item>
+        <item>3. A Safe Haven</item>
+        <item>4. Beavers: Builders of Community Space</item>
+        <item>5. Outdoor Classroom</item>
+        <item>6. Powerful Ties from Past to Present</item>
+        <item>7. Overlook the Sanctuary</item>
+        <item>8. Bird Hollow</item>
+        <item>9. Where Rivers Come Together</item>
+        <item>10. Birds of Prey</item>
+        <item>11. Journey\'s End</item>
+    </string-array>
+    <string-array name="latitudes">
+        <item>39.195</item>
+        <item>39.195008</item>
+        <item>39.195428</item>
+        <item>39.195798</item>
+        <item>39.195998</item>
+        <item>39.19643</item>
+        <item>39.196613</item>
+        <item>39.196513</item>
+        <item>39.196368</item>
+        <item>39.195324</item>
+        <item>39.195216</item>
+    </string-array>
+    <string-array name="longitudes">
+        <item>-106.821141</item>
+        <item>-106.82138</item>
+        <item>-106.822069</item>
+        <item>-106.822166</item>
+        <item>-106.821823</item>
+        <item>-106.821629</item>
+        <item>-106.82156</item>
+        <item>-106.821265</item>
+        <item>-106.821265</item>
+        <item>-106.821227</item>
+        <item>-106.821004</item>
+    </string-array>
+     <string-array name="desciptions">
+        <item>Natural springs feed Hallam Lake throughout the year, creating a hub of animal and plant activity. These springs have always served as a gathering place for people and wildlife. Ute Indians believed that springs were sacred places. They would camp near areas like Hallam Lake when they followed game into the mountains during the summer.
+        </item>
+        <item>It\'s time to meet ACES\' resident Golden Eagle, a real Aspen local. In the summer of 1982 this eagle was found on the backside of Aspen Mountain by hikers.  She was brought to a raptor rehabilitation center in Fort Collins, where she was treated for a broken right wing and left leg. She was then returned to Aspen and Hallam Lake where she has lived ever since.
+        </item>
+        <item>Take a seat and enjoy the view! The bench here offers us a place of refuge from the sun, rain, or snow, just as the lake offers refuge to a plethora of waterfowl. Geese and ducks return to Hallam Lake every year as the lake provides a safe stepping-stone on the journey of migration. It is a place to rest, relax, recharge, and connect with other travelers. Why do these birds stop here? The lake is an ideal habitat and is full of food. Hallam Lake never completely freezes in winter due to its 48  F spring water source. This provides a consistent, open-water site all year long.  At Hallam Lake we mark the seasons by visits from the birds. We count on their arrival just as they count on the safe haven that Hallam Lake offers
+        </item>
+        <item>Beavers have been living here at Hallam Lake for many decades. They are most active at dawn and dusk. Do you see any signs of their activity? Chewed sticks, pointed tree stumps, dams, and lodges are all clues that beavers live nearby. The beavers here live in a bank lodge located on the other side of the lake, under the leaning blue spruce tree.
+        </item>
+        <item>As you stand here at the teaching platforms, you are joining a long lineage of visitors who have found Hallam Lake a place of connection and inspiration. Since the very early days of ACES, children and adults have used this spot as an outdoor classroom and laboratory, a place of thoughtful observation and study to reconnect with nature. Artists and writers have used Hallam Lake as an outdoor studio, finding these platforms to be a wonderful spot to express themselves. If you have a camera, a journal, or watercolors, stop and get in touch with your inner artist!
+        </item>
+        <item> Look down and take notice of the strange plants growing next to the trail. The plants below are commonly known as horsetails and are a connection to an ancient part of plant history. Spore-producing horsetails belong to the genus Equisetum, in a plant family that is over 300 million years old!  They are also called scouring rushes because silica, stored in the plant\'s cells, makes them effective for scrubbing pots or polishing wood.  Native Americans used the horsetails as a blood coagulant, and more recent medical research has shown these plants to be an effective diuretic.  Can you think of other ancient plants or animals that are still living today?
+        </item>
+        <item>Turn left for an out-and-back to the marsh platform.
+        </item>
+        <item>Birding is a great way to connect with wildlife near your home or any place you visit. Take a moment to peek inside Bird Hollow. During the winter, bird feeders are hung from the trees and many species of birds can be seen here. Chickadees, nuthatches, finches, and Steller\'s Jays all frequent this area looking for food. Bird diversity increases dramatically in the summer.
+        </item>
+        <item>The rushing water below is the Roaring Fork River just before it meets Hunter Creek. Hallam Lake can be geographically defined as the low, wet riparian area adjacent to the confluence of Hunter Creek and the Roaring Fork River.
+        </item>
+        <item>You are standing in front of the Birds of Prey (BOP) House, the hub of our non-releasable raptor program. While at ACES, the resident BOP serve as our best educators, allowing visitors to get up close and personal to powerful wild animals.
+        </item>
+        <item>Thank you for visiting Hallam Lake today! This has always been a place of connection for animals and people, from the early times of the Ute Indians to the present-day visitors and guests of our nature center. Birds touch down on the lake and rest, and this is a safe haven for deer, black bears, and beavers to raise their young. Hallam Lake is an important hub for the Aspen community, offering a place for people to share stories and ideas, as well as find inspiration and peace. Nature centers in many communities provide a place where everyone is welcome regardless of race, religion, or financial status.
+        </item>
+    </string-array>
+    <string-array name="category">
+        <item>1.Bird</item>
+        <item>2.Plant</item>
+        <item>3.Other</item>
+    </string-array>
+     <string-array name="activity">
+        <item>1.Stump the Community</item>
+        <item>2.Tracks</item>
+        <item>3.Native or Not?</item>
+    </string-array>
+</resources>

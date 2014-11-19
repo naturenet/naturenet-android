@@ -1,0 +1,103 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="org.naturenet.activities.EditObservationActivity$PlaceholderFragment" >
+
+	<LinearLayout
+        android:id="@+id/edit_observation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+   	    android:layout_marginBottom="10dp" >
+
+   	  	<ImageView
+        android:id="@+id/preview_edit_observation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:src="@drawable/activity" />
+
+
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/ll_edit_observation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_below="@+id/edit_observation"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+   		<View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+   	    android:layout_marginTop="1dp"
+   	    android:layout_marginBottom="1dp"
+        android:background="#878787" />
+        <LinearLayout
+    		android:layout_width="match_parent"
+    		android:layout_height="wrap_content"
+    		android:orientation="vertical" >
+            <TextView
+        		android:id="@+id/obs_description_tile"
+       			android:layout_width="wrap_content"
+        		android:layout_height="wrap_content"
+        		android:layout_marginLeft="10dp"
+        		android:layout_marginRight="10dp"
+        		android:text="Description"
+        		android:textStyle="bold"/>
+            
+            <org.naturenet.views.MultiLineEditText
+            	android:id="@+id/editText_edit_description"
+           		android:layout_width="match_parent"
+            	android:layout_height="wrap_content"
+            	android:ems="14"
+            	android:imeOptions="actionDone"
+           		android:hint="@string/add_description"
+            	android:inputType="textMultiLine"
+   		 
+        		android:layout_marginLeft="10dp"
+        		android:layout_gravity="right" >
+            <requestFocus />
+        	</org.naturenet.views.MultiLineEditText>
+        </LinearLayout>
+        
+ 		<View
+        	android:layout_width="match_parent"
+        	android:layout_height="1dp"
+   	    	android:layout_marginTop="1dp"
+   	    	android:layout_marginBottom="1dp"
+        	android:background="#878787" />
+ 		
+        <ListView
+            android:id="@+id/listView_edit_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:divider="#878787" >
+        </ListView>
+        <View
+        	android:layout_width="match_parent"
+        	android:layout_height="1dp"
+   	    	android:layout_marginTop="1dp"
+   	    	android:layout_marginBottom="1dp"
+        	android:background="#878787" />
+       <Button
+            android:id="@+id/btn_obs_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        	android:layout_gravity="right"
+            android:text="@string/submit" />
+    </LinearLayout>
+
+
+</LinearLayout>

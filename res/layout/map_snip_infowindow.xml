@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_margin="10dp" >
+
+    <TextView
+        android:id="@+id/loc_snip_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Title"
+        android:textStyle="bold" />
+
+    <!--
+         <ImageView
+        android:id="@+id/snip_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/map_snip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/close" />
+    -->
+
+    <View
+        android:id="@+id/viewline_in_map"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/loc_snip_title"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#878787" />
+
+    <TextView
+        android:id="@+id/map_snip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/viewline_in_map"
+        android:layout_marginTop="2dp"
+        android:text="TextView" />
+
+</RelativeLayout>
