@@ -31,7 +31,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class ActivitiesFragment extends Fragment {
     private ListView lvActivities;
-    private String[] activities = new String[] { "Native or Not?", "Tracks", "Stump the Community" };
     private int[] counts = new int[] { 200, 150, 66, 20};
     public final static String TAG = ActivitiesFragment.class.getName();
 

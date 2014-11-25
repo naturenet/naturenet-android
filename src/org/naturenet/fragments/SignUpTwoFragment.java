@@ -107,7 +107,7 @@ public class SignUpTwoFragment extends Fragment {
 			}
 		}
 		
-		dataPasser.onDataPass(consentText);
+		dataPasser.onConsentDataPass(consentText);
 	    }
 
 	});
@@ -133,6 +133,6 @@ public class SignUpTwoFragment extends Fragment {
     
     /* a public interface for sending consent text to final stage fragment */
     public interface OnDataPassListener {
-	public void onDataPass(String consent);
+	public void onConsentDataPass(String consent);
     } 
 }

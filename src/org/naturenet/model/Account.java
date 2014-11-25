@@ -68,8 +68,12 @@ public class Account extends NNModel {
 	NatureNetAPI api = NatureNetRestAdapter.get();
 	Result<List<Note>> r = api.listNotes(username);
 	for (Note u : r.data) {
-	    u.state = STATE.DOWNLOADED;
-	    u.commit();
+	    // if the image is deleted on server, don't download 
+	    // added by Jinyue Xia
+	    if (u.getStatus() != null && !u.getStatus().equals("deleted")) {
+		    u.state = STATE.DOWNLOADED;
+		    u.commit();
+	    }
 	}
     }
 

@@ -64,6 +64,12 @@ public class Context extends NNModel {
         Map p = gson.fromJson(extras, Map.class);
         return Objects.firstNonNull(p, new HashMap());
 	}
+	
+	/* added by Jinyue Xia
+	 * if the extras is activity image's link, return extras as a String */
+	public String getLinkExtras() {
+	    return extras;
+	}
 
 	public Site getSite() {
 		return Model.load(Site.class, site_id);

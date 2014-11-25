@@ -5,11 +5,13 @@ import java.util.Date;
 
 import org.naturenet.rest.NatureNetAPI;
 import org.naturenet.rest.NatureNetRestAdapter;
+
 import retrofit.RetrofitError;
 import android.util.Log;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
@@ -221,6 +223,11 @@ public abstract class NNModel extends Model {
 		return new Select().from(clazz).where("name = ?", name).executeSingle();		
 	}	
 
+	/* clear context db, added by Jinyue Xia */
+	public static <T extends NNModel> T deleteByName(Class clazz, String name) {
+		return new Delete().from(clazz).where("name = ?", name).executeSingle();		
+	}	
+	
 	public Long getTimeCreated() {
 		return created_at;
 	}

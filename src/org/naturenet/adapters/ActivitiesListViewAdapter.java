@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.naturenet.activities.R;
 
+import com.squareup.picasso.Picasso;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,6 +53,10 @@ public class ActivitiesListViewAdapter extends BaseAdapter {
 	TextView tvTitle = (TextView) rowView.findViewById(R.id.textview_activity_title);
 	String title = activities.get(position).getTitle();
 	tvTitle.setText(title);
+	String imageLink =  activities.get(position).getLinkExtras();
+	ImageView ivActivity = (ImageView) rowView.findViewById(R.id.activityImg_in_listview);
+	Picasso.with(context).load(imageLink).resize(150, 150).centerCrop().into(ivActivity);
+//	Picasso.with(context).load(imageLink).fit().into(ivActivity);
 	return rowView;
     }
 

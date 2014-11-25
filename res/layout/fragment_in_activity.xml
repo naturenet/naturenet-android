@@ -2,35 +2,61 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/cam_in_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView_in_act"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:src="@drawable/camera" />
+
+    <TextView
+        android:id="@+id/textView_in_act"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:padding="1dp"
+        android:text="Take a new observation in this activity" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:background="#BABABA" >
+
+        <ImageView
+            android:id="@+id/imageView_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/activity" />
+
+        <TextView
+            android:id="@+id/textview_activity_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/imageView_activity"
+            android:text="TextView" 
+        	android:textSize="20dp"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/observation_about"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:text="About"
-        android:textSize="20dp" />
- 
-     <ImageView
-          android:id="@+id/cam_in_activity"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-   	      android:layout_above="@+id/textView_in_act"
-          android:layout_marginTop="5dp"
-          android:gravity="center"
-          android:src="@drawable/camera" />
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_marginTop="10dp"
+        android:text="About"/>
 
-   	 <TextView
-   	     android:id="@+id/textView_in_act"
-   	     android:layout_width="match_parent"
-   	     android:layout_height="wrap_content"
-   	     android:layout_alignParentBottom="true"
-          android:padding="1dp"
-   	     android:gravity="center"
-   	     android:layout_marginBottom="5dp"
-   	     android:text="Take a new observation in this activity" />
 </RelativeLayout>

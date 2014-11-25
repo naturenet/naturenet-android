@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" 
-    android:focusable="true"
     >
 
     <TextView
@@ -25,6 +24,7 @@
         android:layout_below="@+id/textView1"
         android:layout_marginTop="5dp"
         android:ems="10"
+        android:imeOptions="actionDone"
 		android:hint="Type your design idea here..." >
         <requestFocus />
     </EditText>

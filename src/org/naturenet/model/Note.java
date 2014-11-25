@@ -57,6 +57,10 @@ public class Note extends NNModel {
 	@Expose
 	@Column(name="Kind")
 	private String kind;
+	
+	@Expose
+	@Column(name="status")
+	private String status;
 
 	protected void resolveDependencies(){
 		account = NNModel.resolveByUID(Account.class, account.getUId());
@@ -177,6 +181,7 @@ public class Note extends NNModel {
 				add("account", getAccount()).
 				add("context", getContext()).
 				add("kind", getKind()).
+				add("status", getStatus()).
 				//add("medias", getMedias()).
 				toString();
 	}
@@ -259,4 +264,13 @@ public class Note extends NNModel {
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 }

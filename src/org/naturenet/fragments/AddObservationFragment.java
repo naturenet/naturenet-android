@@ -238,6 +238,9 @@ public class AddObservationFragment extends Fragment {
 	}
 	// dismiss loading overlay
 	loadingLayout.setVisibility(View.GONE);
+	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+		Context.INPUT_METHOD_SERVICE);
+	imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
     
     @Override

@@ -6,19 +6,19 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:paddingLeft="5dp"	
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"        	
-    	android:layout_marginTop="5dp"
+        android:paddingLeft="2dp"	
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"        	
+    	android:layout_marginBottom="2dp"
         android:background="#BABABA">
 
-        <TextView
-            android:id="@+id/textview_activity_title"
+        <ImageView
+            android:id="@+id/activityImg_in_listview"
+           android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_height="40dp"
+            android:layout_centerVertical="true" 
+           android:src="@drawable/activity" />
 
         <!-- <TextView
             android:id="@+id/textview_activities_count"
@@ -33,11 +33,21 @@
     	<ImageView
     	    android:id="@+id/imageView_activity_next"
     	    android:layout_width="wrap_content"
-    	    android:layout_height="wrap_content"
+    	    android:layout_height="25dp"
     	    android:layout_alignParentRight="true"
-    	    android:layout_alignTop="@+id/textview_activity_title"
-    	    android:layout_alignBottom ="@+id/textview_activity_title"
+    	    android:layout_centerVertical="true"
+    	    android:layout_marginRight="5dp"
     	    android:src="@drawable/next" />
+
+    	<TextView
+    	    android:id="@+id/textview_activity_title"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_centerVertical="true"
+    	    android:layout_marginLeft="5dp"
+    	    android:layout_toRightOf="@+id/activityImg_in_listview"
+    	    android:text="title"
+    	    android:textAppearance="?android:attr/textAppearanceMedium" />
         
     </RelativeLayout>
 

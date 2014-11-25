@@ -80,6 +80,7 @@ public class ProfileFragment extends Fragment {
     
     private void onSignOut() {
 	Session.signOut();
+//	getActivity().deleteDatabase("RestClient.db");
 	FragmentManager fm = getActivity().getSupportFragmentManager();
 	fm.popBackStack();
     }

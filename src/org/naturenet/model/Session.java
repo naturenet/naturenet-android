@@ -2,9 +2,11 @@ package org.naturenet.model;
 
 import android.util.Log;
 
+import com.activeandroid.ActiveAndroid;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
 @Table(name="SESSION", id="tID")
@@ -38,6 +40,17 @@ public class Session extends Model{
 		return Model.load(Site.class, getSingleton().site_id);
 	}
 	
+	/* Delete all tables in local database
+	 * Added by Jinyue Xia */
+	static public void clearDB() {
+	    new Delete().from(Media.class).where("note_id > ?", 0).execute();	    
+	    new Delete().from(Note.class).where("tID > ?", 0).execute();
+	    new Delete().from(Feedback.class).where("target_id > ?", 0).execute();
+	    new Delete().from(Account.class).where("tID > ?", 0).execute();
+	    new Delete().from(Context.class).where("tID > ?", 0).execute();
+	    new Delete().from(Site.class).where("tID > ?", 0).execute();
+	}
+	
 	static public void signIn(Account account, Site site){
 		Log.d(TAG,"sign in: " + account + " at " + site);
 		Session session = getSingleton();
@@ -58,6 +71,7 @@ public class Session extends Model{
 
 	public static void signOut() {
 		Session session = getSingleton();
+		clearDB(); // added by Jinyue Xia
 		session.account_id = -1L;		
 		session.site_id = -1L;		
 		session.save();

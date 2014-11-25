@@ -11,6 +11,7 @@ import org.naturenet.rest.NatureNetAPI.Result;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.google.common.base.Objects;
 import com.google.gson.annotations.Expose;
@@ -82,6 +83,11 @@ public class Site extends NNModel{
 	
 	public List<Context> getLandmarks(){
 		return new Select().from(Context.class).where("site_id = ? and kind = ?", getId(), "Landmark").execute();
+	}
+	
+	/* added by Jinyue Xia */
+	public void deleteActivities() {
+	    	new Delete().from(Context.class).where("site_id = ? and kind = ?", getId(), "Activity").execute();
 	}
 	
 	public String toString(){

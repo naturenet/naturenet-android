@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import org.naturenet.fragments.ActivityFragment;
 import org.naturenet.fragments.AddObservationFragment;
 import org.naturenet.fragments.HomeFragment;
@@ -28,16 +29,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 public class MainActivity extends FragmentActivity implements HomeFragment.OnPassAccount,
 	ObservationFragment.OnDataPassListener, TourFragment.OnDataPassListener,
 	ActivitiesFragment.onActivityPassListener, ActivityFragment.OnActivityIdPassListener,
 	AddObservationFragment.onPassNewObservationListener,
 	FragmentManager.OnBackStackChangedListener {
+    private String mCurrentPhotoPath;    
     private Menu actionbarMenu;
-    
-    public final String APP_TAG = "NatureNet";
-    private String mCurrentPhotoPath;
     private Uri       fileUri;		  // file url for image file path
     private String selectLocation;   //location name from tour fragment
     private String selectActivity;   //activity name from activity fragment
@@ -53,13 +54,19 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
-	fragmentManager = getSupportFragmentManager();
-	fragmentManager.addOnBackStackChangedListener(this);
 	if (savedInstanceState == null) {
 	    /* initialize site data */
-	    InitialDownloadTask task = new InitialDownloadTask(this);
-	    task.execute((Void) null);
+	    // InitialDownloadTask task = new InitialDownloadTask(this);
+	    // task.execute((Void) null);
+	    RelativeLayout ll = (RelativeLayout) findViewById(R.id.llayout_initapp_loading);
+	    ll.setVisibility(View.GONE);
+	    getSupportFragmentManager().beginTransaction()
+		.add(R.id.main_container, HomeFragment.newInstance(), HomeFragment.TAG)
+		.addToBackStack(HomeFragment.TAG)
+		.commit();
 	}
+	fragmentManager = getSupportFragmentManager();
+	fragmentManager.addOnBackStackChangedListener(this);
     }
 
     @Override
@@ -164,8 +171,8 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 
     @Override
     public void onPassAccountIdListener(long id) {
-	ObservationFragment obsFragment =  
-		(ObservationFragment) getSupportFragmentManager().findFragmentByTag(ObservationFragment.TAG);
+	ObservationFragment obsFragment = (ObservationFragment) getSupportFragmentManager()
+						.findFragmentByTag(ObservationFragment.TAG);
 	obsFragment.setAccoutId(id);
     }
     
@@ -199,6 +206,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 	b.putLong(ActivityFragment.ACTIVITYID, context.getId());
 	b.putString(ActivityFragment.ACTIVITYNAME, context.getName());
 	b.putString(ActivityFragment.ACTIVITYTITLE, context.getTitle());
+	b.putString(ActivityFragment.ACTIVITYIMAGELINK, context.getLinkExtras());
 	nFragment.setArguments(b);
 	replaceFragment(nFragment, R.id.main_container, ActivityFragment.TAG); 
     }
@@ -268,7 +276,14 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     @Override
     public void onStop() {
 	super.onStop();
-	Session.signOut();
+    }
+    
+    @Override
+    public void onDestroy() {
+	if (Session.isSignedIn()) {
+	    Session.signOut();
+	}
+	super.onDestroy();
     }
     
     /* dispatch camera intent */

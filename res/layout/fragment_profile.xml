@@ -158,6 +158,6 @@
           android:layout_centerHorizontal="true"
           android:layout_marginTop="20dp"
           android:background="@drawable/buttonshape"
-          android:text="Log out" />
+          android:text="Sign out" />
 
 </RelativeLayout>

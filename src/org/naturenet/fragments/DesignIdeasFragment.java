@@ -77,9 +77,6 @@ public class DesignIdeasFragment extends Fragment {
 //	DesignIdeasListViewAdapter adpater = new DesignIdeasListViewAdapter(getActivity(), ideas, likes);
 //	lvIdeas.setAdapter(adpater);
 	etIdea = (EditText) rootView.findViewById(R.id.editText_design_idea);
-	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-	imm.showSoftInput(etIdea, InputMethodManager.SHOW_IMPLICIT);
-	etIdea.requestFocus();
 	btnIdeaSubmit = (Button) rootView.findViewById(R.id.button_submit_idea);
 	btnIdeaSubmit.setOnClickListener(new OnClickListener() {
 	    @Override
@@ -98,6 +95,13 @@ public class DesignIdeasFragment extends Fragment {
 	});
 	return rootView;
     }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+	 super.onActivityCreated(savedInstanceState);
+	 final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+	 imm.showSoftInput(etIdea, InputMethodManager.SHOW_IMPLICIT);
+}
     
     @Override
     public void onResume() {

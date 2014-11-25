@@ -53,8 +53,6 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	    // In case this activity was started with special instructions from
 	    // an Intent, pass the Intent's extras to the fragment as arguments
 	    firstFragment.setArguments(getIntent().getExtras());
-
-	    // Add the fragment to the 'fragment_container' FrameLayout
 	    getSupportFragmentManager().beginTransaction()
 		    .add(R.id.fragment_container_login, firstFragment).commit();
 	}
@@ -72,7 +70,6 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {
 	case android.R.id.home:
-	    // app icon in action bar clicked; goto parent activity.
 	    this.finish();
 	    return true;
 	default:
@@ -91,9 +88,7 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
      * ActionBar's title changes based on the fragment
      */
     public void setActionBarTitle(String title) {
-	// Log.d("debug", "title is changed to: " + title);
 	getActionBar().setTitle(title);
-	// Log.d("debug", "get title is" + getActionBar().getTitle());
     }
 
     /**
@@ -103,13 +98,12 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 	transaction.replace(fragmentid, fragment);
 	transaction.addToBackStack(null);
-	// Commit the transaction
 	transaction.commit();
     }
 
 
     @Override
-    public void onDataPass(String consentText) {
+    public void onConsentDataPass(String consentText) {
 	SignUpLastFragment lastFragment = new SignUpLastFragment();
 	Bundle b = new Bundle();
 	b.putString(SignUpTwoFragment.CONSENT, consentText);

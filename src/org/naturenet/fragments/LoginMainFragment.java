@@ -6,6 +6,7 @@ import org.naturenet.activities.R;
 import org.naturenet.activities.LoginActivity;
 import org.naturenet.model.Account;
 import org.naturenet.model.NNModel;
+import org.naturenet.model.Site;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -34,41 +35,39 @@ public class LoginMainFragment extends Fragment {
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[] {
-	    "foo@example.com:hello", "bar@example.com:world" };
+    private static final String[] DUMMY_CREDENTIALS = new String[] { "foo@example.com:hello",
+	    "bar@example.com:world"		};
 
     /**
      * The default email to populate the email field with.
      */
-    public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
+    public static final String    EXTRA_EMAIL       = "com.example.android.authenticatordemo.extra.EMAIL";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private UserLoginTask	 mAuthTask	 = null;
 
     // Values for email and password at the time of the login attempt.
-    private String mUsername;
-    private String mPassword;
+    private String		mUsername;
+    private String		mPassword;
 
     // UI references.
-    private EditText mEmailView;
-    private EditText mPasswordView;
-    private View mLoginFormView;
-    private View mLoginStatusView;
-    private TextView mLoginStatusMessageView;
-    private PassAccount passComm;
-    
+    private EditText	      mEmailView;
+    private EditText	      mPasswordView;
+    private View		  mLoginFormView;
+    private View		  mLoginStatusView;
+    private TextView	      mLoginStatusMessageView;
+    private PassAccount	   passComm;
+
     public static LoginMainFragment newInstance() {
 	LoginMainFragment f = new LoginMainFragment();
 	return f;
     }
-    
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	    Bundle savedInstanceState) {
-	View rootView = inflater.inflate(R.layout.fragment_login_main,
-		container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	View rootView = inflater.inflate(R.layout.fragment_login_main, container, false);
 	((LoginActivity) getActivity()).setActionBarTitle("Sign in");
 
 	// Set up the login form.
@@ -77,44 +76,42 @@ public class LoginMainFragment extends Fragment {
 	mEmailView.setText(mUsername);
 
 	mPasswordView = (EditText) rootView.findViewById(R.id.password);
-	mPasswordView
-		.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-		    @Override
-		    public boolean onEditorAction(TextView textView, int id,
-			    KeyEvent keyEvent) {
-			if (id == R.id.login || id == EditorInfo.IME_NULL) {
-			    attemptLogin();
-			    return true;
-			}
-			return false;
-		    }
-		});
+	mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+	    @Override
+	    public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+		if (id == R.id.login || id == EditorInfo.IME_NULL) {
+		    attemptLogin();
+		    return true;
+		}
+		return false;
+	    }
+	});
 
 	mLoginFormView = rootView.findViewById(R.id.login_form);
 	mLoginStatusView = rootView.findViewById(R.id.login_status);
-	mLoginStatusMessageView = (TextView) rootView
-		.findViewById(R.id.login_status_message);
+	mLoginStatusMessageView = (TextView) rootView.findViewById(R.id.login_status_message);
 
-	rootView.findViewById(R.id.sign_in_button).setOnClickListener(
-		new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			attemptLogin();
-		    }
-		});
+	rootView.findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View view) {
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+			Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+		attemptLogin();
+	    }
+	});
 
-	rootView.findViewById(R.id.sign_up_button).setOnClickListener(
-		new View.OnClickListener() {
-		    @Override
-		    public void onClick(View view) {
-			SignUpOneFragment newFragment = new SignUpOneFragment();
-			((LoginActivity) getActivity()).replaceFragment(
-				newFragment, R.id.fragment_container_login);
-			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-				Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-		    }
-		});
+	rootView.findViewById(R.id.sign_up_button).setOnClickListener(new View.OnClickListener() {
+	    @Override
+	    public void onClick(View view) {
+		SignUpOneFragment newFragment = new SignUpOneFragment();
+		((LoginActivity) getActivity()).replaceFragment(newFragment,
+			R.id.fragment_container_login);
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+			Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+	    }
+	});
 	return rootView;
     }
 
@@ -155,12 +152,7 @@ public class LoginMainFragment extends Fragment {
 	    mEmailView.setError(getString(R.string.error_field_required));
 	    focusView = mEmailView;
 	    cancel = true;
-	} 
-//	else if (!mUsername.contains("@")) {
-//	    mEmailView.setError(getString(R.string.error_invalid_email));
-//	    focusView = mEmailView;
-//	    cancel = true;
-//	}
+	}
 
 	if (cancel) {
 	    // There was an error; don't attempt login and focus the first
@@ -172,7 +164,11 @@ public class LoginMainFragment extends Fragment {
 	    mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 	    showProgress(true);
 	    mAuthTask = new UserLoginTask();
-	    mAuthTask.execute((Void) null);
+	    try {
+		mAuthTask.execute((Void) null);
+	    } catch (Exception e) {
+		    Log.d("debug", "can't log in");
+	    }
 	}
     }
 
@@ -185,28 +181,23 @@ public class LoginMainFragment extends Fragment {
 	// for very easy animations. If available, use these APIs to fade-in
 	// the progress spinner.
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-	    int shortAnimTime = getResources().getInteger(
-		    android.R.integer.config_shortAnimTime);
+	    int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
 	    mLoginStatusView.setVisibility(View.VISIBLE);
-	    mLoginStatusView.animate().setDuration(shortAnimTime)
-		    .alpha(show ? 1 : 0)
+	    mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
 		    .setListener(new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationEnd(Animator animation) {
-			    mLoginStatusView.setVisibility(show ? View.VISIBLE
-				    : View.GONE);
+			    mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			}
 		    });
 
 	    mLoginFormView.setVisibility(View.VISIBLE);
-	    mLoginFormView.animate().setDuration(shortAnimTime)
-		    .alpha(show ? 0 : 1)
+	    mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1)
 		    .setListener(new AnimatorListenerAdapter() {
 			@Override
 			public void onAnimationEnd(Animator animation) {
-			    mLoginFormView.setVisibility(show ? View.GONE
-				    : View.VISIBLE);
+			    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 			}
 		    });
 	} else {
@@ -227,39 +218,46 @@ public class LoginMainFragment extends Fragment {
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
-	    mAccount = NNModel.resolveByName(Account.class, mUsername);
-	    // if the account does not exist
-	    if (mAccount == null) {
-		errorMessage = "Unable to find " + mUsername;
-		return false;
-	    } else {
-		checkNotNull(mAccount);
-		// Log.d("debug", mAccount.toString());
-		if (mAccount.getPassword().equalsIgnoreCase(mPassword)) {
-		    // pull notes executed here... why??
-		    mAccount.pullNotes();
-		    return true;
-		} else {
-		    errorMessage = "Username and PIN are incorrect";
-		    return false;
+	    boolean success = false;
+	    try {
+		// pull site table first
+		if (NNModel.countLocal(Site.class) == 0) {
+		    NNModel.resolveByName(Site.class, "aces");
 		}
+		// pull account table
+		mAccount = NNModel.resolveByName(Account.class, mUsername);
+		// if the account does not exist
+		if (mAccount == null) {
+		    errorMessage = "Unable to find " + mUsername;
+		    success = false;
+		} else {
+		    checkNotNull(mAccount);
+		    // Log.d("debug", mAccount.toString());
+		    if (mAccount.getPassword().equalsIgnoreCase(mPassword)) {
+			// pull notes executed here... why??
+			mAccount.pullNotes();
+			success = true;
+		    } else {
+			errorMessage = "Username and PIN are incorrect";
+			success = false;
+		    }
 
+		}
+	    } catch (Exception e) {
+		errorMessage = "No Internet connction";
+		Log.d("debug", "can't log in");
 	    }
+	    return success;
 	}
 
 	@Override
 	protected void onPostExecute(final Boolean success) {
 	    mAuthTask = null;
 	    showProgress(false);
-
 	    if (success) {
 		checkNotNull(mAccount);
 		passComm.onAccountPass(mAccount.getId());
 		getActivity().finish();
-		// Intent result = new Intent();
-		// result.putExtra(EXTRA_ACCOUNT_ID, mAccount.getId());
-		// setResult(getActivity().RESULT_OK, result);
-		// finish();
 	    } else {
 		mEmailView.setError(errorMessage);
 		mEmailView.requestFocus();
@@ -272,16 +270,14 @@ public class LoginMainFragment extends Fragment {
 	    showProgress(false);
 	}
     }
-    
+
     @Override
-    public void onAttach (Activity a) {
+    public void onAttach(Activity a) {
 	super.onAttach(a);
 	passComm = (PassAccount) a;
     }
-    
+
     public interface PassAccount {
 	public void onAccountPass(Long id);
     }
 }
-
-

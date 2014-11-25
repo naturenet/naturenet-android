@@ -18,7 +18,9 @@ import com.activeandroid.Model;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -76,19 +78,22 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	actionBar = getActivity().getActionBar();
 	setHasOptionsMenu(true);
+	actionBar.setTitle(R.string.title_fragment_home);
+	actionBar.setDisplayHomeAsUpEnabled(false);
 	rootView = inflater.inflate(R.layout.fragment_home, container, false);
-	tvWelcome = (TextView) rootView.findViewById(R.id.textView_signin);
-	btnSign = (Button) rootView.findViewById(R.id.btn_sign_in);
 	HomeGridAdapter adapter = new HomeGridAdapter(rootView.getContext(), items, imgIds);
 	gridView = (GridView) rootView.findViewById(R.id.home_grid);
 	gridView.setAdapter(adapter);
+	tvWelcome = (TextView) rootView.findViewById(R.id.textView_signin);
+	btnSign = (Button) rootView.findViewById(R.id.btn_sign_in);
+	
 	gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 	    @Override
 	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Fragment newFragment = null;
 		String tag = null;
 		if (account == null || !Session.isSignedIn()) {
-		    Toast.makeText(getActivity(), "Please log in!", Toast.LENGTH_SHORT).show();
+		    showLogInAlert();
 		    return;
 		}
 		switch (position) {
@@ -135,10 +140,7 @@ public class HomeFragment extends Fragment {
     
     @Override
     public void onResume() {
-        super.onResume();
-        getActivity().getActionBar()
-            .setTitle(R.string.title_fragment_home);
-	getActivity().getActionBar().setDisplayHomeAsUpEnabled(false);
+	super.onResume();
     }
     
     @Override
@@ -186,8 +188,7 @@ public class HomeFragment extends Fragment {
 		Context.CONNECTIVITY_SERVICE);
 	NetworkInfo netInfo = conMan.getActiveNetworkInfo();
 	if (netInfo == null || !netInfo.isConnected()) {
-	    Toast.makeText(getActivity(), "No internet connection!", Toast.LENGTH_LONG)
-		    .show();
+	    showNoInternetAlert();
 	    return;
 	}
 	Intent i = new Intent(getActivity(), LoginActivity.class);
@@ -226,12 +227,12 @@ public class HomeFragment extends Fragment {
     private void showWelcome() {
 	btnSign.setVisibility(View.GONE);
 	tvWelcome.setVisibility(View.VISIBLE);
-	String userName = account.getName();
+	String userName = account.getUsername();
 //	String welcome = "If you're not "+ userName + ", please sign in!";
+//	SpannableString content = new SpannableString(welcome);
+//	content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
 	String welcome = "Welcome, " + userName;
-	SpannableString content = new SpannableString(welcome);
-	content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-	tvWelcome.setText(content);
+	tvWelcome.setText(welcome);
 	((MainActivity) getActivity()).setOptionTitle(R.id.action_settings, MainActivity.SIGNOUT);
     }
     
@@ -258,4 +259,27 @@ public class HomeFragment extends Fragment {
 	public void onPassAccountIdListener(long account_id);
     }
     
+    private void showNoInternetAlert() {
+	AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getActivity());
+	alertDialog.setTitle("Warning");
+	alertDialog.setMessage("No Internet Connection, Please Check!");
+	alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+	    public void onClick(DialogInterface dialog, int which) {
+		dialog.cancel();
+	    }
+	});
+	alertDialog.show();
+    }
+    
+    private void showLogInAlert() {
+	AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getActivity());
+	alertDialog.setTitle("Warning");
+	alertDialog.setMessage("Please Sign In First!");
+	alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+	    public void onClick(DialogInterface dialog, int which) {
+		dialog.cancel();
+	    }
+	});
+	alertDialog.show();
+    }
 }
