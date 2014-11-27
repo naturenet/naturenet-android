@@ -69,7 +69,8 @@
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
-                android:inputType="textPassword"
+                android:inputType="numberPassword"
+                android:maxLength="4"
                 android:maxLines="1"
                 android:singleLine="true" />
 

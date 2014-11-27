@@ -2,11 +2,13 @@ package org.naturenet.fragments;
 
 import org.naturenet.activities.R;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -28,11 +30,16 @@ public class SignUpTwoFragment extends Fragment {
     private Button nextBtn;
     private OnDataPassListener dataPasser;
     public final static String CONSENT = "consentText";
+    public static final String TAG = SignUpTwoFragment.class.getName();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
-	((LoginActivity) getActivity()).setActionBarTitle("Sign Up Step 2");
+	ActionBar actionBar = getActivity().getActionBar();
+	actionBar.setTitle("Sign Up:Consent");
+	actionBar.setDisplayHomeAsUpEnabled(true);
+	setHasOptionsMenu(true);
 	rootView = inflater.inflate(R.layout.fragment_signup_2, container,
 		false);
 	LinearLayout llayout = (LinearLayout) rootView.findViewById(R.id.llayout_LoginFormContainer);
@@ -51,6 +58,17 @@ public class SignUpTwoFragment extends Fragment {
 	return rootView;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case android.R.id.home:
+	    getActivity().getSupportFragmentManager().popBackStack();
+	    return true;
+	default:
+	    return super.onOptionsItemSelected(item);
+	}
+    }
+    
     /**
      * initialize the checkboxes in this fragment
      * */
@@ -60,6 +78,11 @@ public class SignUpTwoFragment extends Fragment {
 	this.chkThree = (CheckBox) rootView.findViewById(R.id.checkBox3);
 	this.chkFour = (CheckBox) rootView.findViewById(R.id.checkBox4);
 	this.nextBtn = (Button) rootView.findViewById(R.id.step2_next_button);
+	nextBtn.setEnabled(true);
+
+	if (isRequiredChecked()) {
+	    nextBtn.setEnabled(true);
+	}
     }
 
     /**

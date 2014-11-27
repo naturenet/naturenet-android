@@ -1,15 +1,12 @@
 package org.naturenet.fragments;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.naturenet.activities.R;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,23 +14,22 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.view.KeyEvent;
 
-import org.naturenet.activities.LoginActivity;
 import org.naturenet.model.Account;
+import org.naturenet.model.NNModel;
+import org.naturenet.model.Site;
 import org.naturenet.rest.NatureNetAPI;
 import org.naturenet.rest.NatureNetAPI.Result;
 import org.naturenet.rest.NatureNetRestAdapter;
-
+import org.naturenet.fragments.LoginMainFragment.PassLogInAccount;
 import retrofit.RetrofitError;
 
 public class SignUpLastFragment extends Fragment {
@@ -57,16 +53,20 @@ public class SignUpLastFragment extends Fragment {
 
     private String	 mConsentText;
     private Account	mAccount;
-    private OnAcccountPassListener accountPasser;
+    private PassLogInAccount accountPasser;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserSignUpTask mAuthTask = null;
+    public static final String TAG = SignUpLastFragment.class.getName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	((LoginActivity) getActivity()).setActionBarTitle("Sign Up Step 3");
+	ActionBar actionBar = getActivity().getActionBar();
+	actionBar.setTitle("Sign Up Step:Enter your details");
+	actionBar.setDisplayHomeAsUpEnabled(true);
+	setHasOptionsMenu(true);
 	rootView = inflater.inflate(R.layout.fragment_signup_3, container, false);
 	if (getArguments() != null) {
 	    String consent = getArguments().getString(SignUpTwoFragment.CONSENT);
@@ -84,7 +84,6 @@ public class SignUpLastFragment extends Fragment {
 	// mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 	 mEmailView = (EditText) rootView.findViewById(R.id.signup_email);
 	 mEmailView.setText(mEmail);
-
 
 	mPasswordView = (EditText) rootView.findViewById(R.id.signup_password);
 	mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -114,9 +113,21 @@ public class SignUpLastFragment extends Fragment {
 
     }
     
+    @Override
     public void onAttach(Activity a) {
 	super.onAttach(a);
-	accountPasser = (OnAcccountPassListener) a;
+	accountPasser = (PassLogInAccount) a;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case android.R.id.home:
+	    getActivity().getSupportFragmentManager().popBackStack();
+	    return true;
+	default:
+	    return super.onOptionsItemSelected(item);
+	}
     }
 
     /**
@@ -254,14 +265,15 @@ public class SignUpLastFragment extends Fragment {
 		// added by Jinyue
 		mAccount.setPassword(mPassword);
 		mAccount.setEmail(mEmail);
-		
 		mAccount.setUId(r.data.getUId());
-		
 //		mAccount.save();
-		
-		// changed by Jinyue
+		// commit to the server too, changed by Jinyue
 		mAccount.commit();
 		Log.d("debug", mAccount.toString());
+		// after sign up successfully, pull site table first
+		if (NNModel.countLocal(Site.class) == 0) {
+		    NNModel.resolveByName(Site.class, "aces");
+		}
 		return true;
 
 	    } catch (RetrofitError e) {
@@ -278,13 +290,8 @@ public class SignUpLastFragment extends Fragment {
 	protected void onPostExecute(final Boolean success) {
 	    mAuthTask = null;
 	    showProgress(false);
-
 	    if (success) {
-		checkNotNull(mAccount);
-		accountPasser.onAccountPass(mAccount.getId());
-//		Intent i = new Intent();
-//		i.putExtra(RESULT_KEY_LOGIN, mAccount.getId());
-//		getActivity().setResult(Activity.RESULT_OK, i);
+		accountPasser.onLogInAccountPass(mAccount.getId());
 		getActivity().finish();
 	    } else {
 		mUsernameView.setError(errorMessage);
@@ -297,10 +304,5 @@ public class SignUpLastFragment extends Fragment {
 	    mAuthTask = null;
 	    showProgress(false);
 	}
-    }
-    
-    /* an interface for passing account info to LoginActivity */
-    public interface OnAcccountPassListener {
-	public void onAccountPass(Long id);
     }
 }

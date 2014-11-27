@@ -273,11 +273,16 @@ public class HomeFragment extends Fragment {
     
     private void showLogInAlert() {
 	AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getActivity());
-	alertDialog.setTitle("Warning");
+	// alertDialog.setTitle("Warning");
 	alertDialog.setMessage("Please Sign In First!");
-	alertDialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+	alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 	    public void onClick(DialogInterface dialog, int which) {
 		dialog.cancel();
+	    }
+	});
+	alertDialog.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+	    public void onClick(DialogInterface dialog, int which) {
+		onClickSingIn();
 	    }
 	});
 	alertDialog.show();

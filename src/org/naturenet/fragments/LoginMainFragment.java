@@ -11,6 +11,7 @@ import org.naturenet.model.Site;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -42,7 +44,8 @@ public class LoginMainFragment extends Fragment {
      * The default email to populate the email field with.
      */
     public static final String    EXTRA_EMAIL       = "com.example.android.authenticatordemo.extra.EMAIL";
-
+    public static final String TAG = LoginMainFragment.class.getName();
+    
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -58,7 +61,7 @@ public class LoginMainFragment extends Fragment {
     private View		  mLoginFormView;
     private View		  mLoginStatusView;
     private TextView	      mLoginStatusMessageView;
-    private PassAccount	   passComm;
+    private PassLogInAccount	   passComm;
 
     public static LoginMainFragment newInstance() {
 	LoginMainFragment f = new LoginMainFragment();
@@ -68,8 +71,10 @@ public class LoginMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	View rootView = inflater.inflate(R.layout.fragment_login_main, container, false);
-	((LoginActivity) getActivity()).setActionBarTitle("Sign in");
-
+	ActionBar actionBar = getActivity().getActionBar();
+	actionBar.setTitle("Sign In");
+	actionBar.setDisplayHomeAsUpEnabled(true);
+	setHasOptionsMenu(true);
 	// Set up the login form.
 	mUsername = getActivity().getIntent().getStringExtra(EXTRA_EMAIL);
 	mEmailView = (EditText) rootView.findViewById(R.id.email);
@@ -106,7 +111,7 @@ public class LoginMainFragment extends Fragment {
 	    public void onClick(View view) {
 		SignUpOneFragment newFragment = new SignUpOneFragment();
 		((LoginActivity) getActivity()).replaceFragment(newFragment,
-			R.id.fragment_container_login);
+			R.id.fragment_container_login, TAG);
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
 			Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
@@ -115,6 +120,17 @@ public class LoginMainFragment extends Fragment {
 	return rootView;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case android.R.id.home:
+	    getActivity().finish();
+	    return true;
+	default:
+	    return super.onOptionsItemSelected(item);
+	}
+    }
+    
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -256,7 +272,7 @@ public class LoginMainFragment extends Fragment {
 	    showProgress(false);
 	    if (success) {
 		checkNotNull(mAccount);
-		passComm.onAccountPass(mAccount.getId());
+		passComm.onLogInAccountPass(mAccount.getId());
 		getActivity().finish();
 	    } else {
 		mEmailView.setError(errorMessage);
@@ -274,10 +290,10 @@ public class LoginMainFragment extends Fragment {
     @Override
     public void onAttach(Activity a) {
 	super.onAttach(a);
-	passComm = (PassAccount) a;
+	passComm = (PassLogInAccount) a;
     }
 
-    public interface PassAccount {
-	public void onAccountPass(Long id);
+    public interface PassLogInAccount {
+	public void onLogInAccountPass(Long id);
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.naturenet.activities"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.1" >
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
@@ -50,12 +50,11 @@
         </activity>
         <activity
             android:name="org.naturenet.activities.LoginActivity"
-            android:parentActivityName="org.naturenet.activities.MainActivity" 
             android:windowSoftInputMode="adjustResize|stateVisible">
             <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
+            <!-- <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.naturenet.activities.MainActivity" />
+                android:value="org.naturenet.activities.MainActivity" /> -->
         </activity>
 
         <meta-data

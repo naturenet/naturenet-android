@@ -158,6 +158,6 @@
           android:layout_centerHorizontal="true"
           android:layout_marginTop="20dp"
           android:background="@drawable/buttonshape"
-          android:text="Sign out" />
+          android:text="@string/action_sign_out_short" />
 
 </RelativeLayout>

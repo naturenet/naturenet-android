@@ -2,6 +2,7 @@ package org.naturenet.activities;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.naturenet.fragments.HomeFragment;
 import org.naturenet.fragments.LoginMainFragment;
 import org.naturenet.fragments.SignUpLastFragment;
 import org.naturenet.fragments.SignUpTwoFragment;
@@ -24,11 +25,12 @@ import android.view.MenuItem;
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends FragmentActivity implements LoginMainFragment.PassAccount, 
-			SignUpTwoFragment.OnDataPassListener, SignUpLastFragment.OnAcccountPassListener {
+public class LoginActivity extends FragmentActivity implements LoginMainFragment.PassLogInAccount, 
+			SignUpTwoFragment.OnDataPassListener {
     private ActionBar actionBar;
     private Account account;
     public static String RESULT_KEY_LOGIN = "userId";
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,21 +66,9 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	// getMenuInflater().inflate(R.menu.login, menu);
 	return true;
     }
-
-    /* click app logo, go home */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-	switch (item.getItemId()) {
-	case android.R.id.home:
-	    this.finish();
-	    return true;
-	default:
-	    return super.onOptionsItemSelected(item);
-	}
-    }
     
     @Override
-    public void onAccountPass(Long account_id) {
+    public void onLogInAccountPass(Long account_id) {
 	Intent i = new Intent();
 	i.putExtra(RESULT_KEY_LOGIN, account_id);
 	setResult(Activity.RESULT_OK, i);
@@ -94,10 +84,10 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
     /**
      * Replace this fragment with next fragment
      */
-    public void replaceFragment(Fragment fragment, int fragmentid) {
+    public void replaceFragment(Fragment fragment, int fragmentid, String tag) {
 	FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 	transaction.replace(fragmentid, fragment);
-	transaction.addToBackStack(null);
+	transaction.addToBackStack(tag);
 	transaction.commit();
     }
 
@@ -108,6 +98,6 @@ public class LoginActivity extends FragmentActivity implements LoginMainFragment
 	Bundle b = new Bundle();
 	b.putString(SignUpTwoFragment.CONSENT, consentText);
 	lastFragment.setArguments(b);
-	replaceFragment(lastFragment, R.id.fragment_container_login);
+	replaceFragment(lastFragment, R.id.fragment_container_login, SignUpLastFragment.TAG);
     }
 }

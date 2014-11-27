@@ -4,17 +4,18 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>  
+    <string name="prompt_password">4-digit passcode</string>  
     <string name="prompt_username">username</string>
     <string name="prompt_name">name</string>
-    <string name="next">next</string>
+    <string name="next">Next</string>
     <string name="cancel">Cancel</string>
     <string name="action_sign_in_register"><b>Sign in</b> or register</string>
-    <string name="action_sign_up_short">Sign up</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_up_short">Sign Up</string>    
+    <string name="action_sign_out_short">Sign Out</string>
+    <string name="action_sign_in_short">Sign In</string>
     <string name="action_forgot_password">Recover lost password</string>
-    <string name="login_progress_signing_in">Signing in&#8230;</string>
-    <string name="sign_progress_signing_up">Signing up&#8230;</string>
+    <string name="login_progress_signing_in">Signing In&#8230;</string>
+    <string name="sign_progress_signing_up">Signing Up&#8230;</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">Only 4-digit numbers can be accepted</string>
     <string name="error_incorrect_password">This password is incorrect</string>

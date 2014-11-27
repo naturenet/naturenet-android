@@ -615,10 +615,11 @@ containing a value of this type.
         public static final int test=0x7f0b0008;
     }
     public static final class string {
-        public static final int action_forgot_password=0x7f04003d;
+        public static final int action_forgot_password=0x7f04003e;
         public static final int action_settings=0x7f040022;
         public static final int action_sign_in_register=0x7f04003a;
-        public static final int action_sign_in_short=0x7f04003c;
+        public static final int action_sign_in_short=0x7f04003d;
+        public static final int action_sign_out_short=0x7f04003c;
         public static final int action_sign_up_short=0x7f04003b;
         public static final int add_description=0x7f040025;
         public static final int app_about=0x7f040032;
@@ -630,10 +631,10 @@ containing a value of this type.
         public static final int auth_client_requested_by_msg=0x7f040005;
         public static final int auth_client_using_bad_version_title=0x7f040000;
         public static final int cancel=0x7f040039;
-        public static final int check_list_1=0x7f040044;
-        public static final int check_list_2=0x7f040045;
-        public static final int check_list_3=0x7f040046;
-        public static final int check_list_4=0x7f040047;
+        public static final int check_list_1=0x7f040045;
+        public static final int check_list_2=0x7f040046;
+        public static final int check_list_3=0x7f040047;
+        public static final int check_list_4=0x7f040048;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -723,12 +724,12 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f04001e;
-        public static final int error_field_required=0x7f040043;
-        public static final int error_incorrect_password=0x7f040042;
-        public static final int error_invalid_email=0x7f040040;
-        public static final int error_invalid_password=0x7f040041;
+        public static final int error_field_required=0x7f040044;
+        public static final int error_incorrect_password=0x7f040043;
+        public static final int error_invalid_email=0x7f040041;
+        public static final int error_invalid_password=0x7f040042;
         public static final int hello_world=0x7f040021;
-        public static final int login_progress_signing_in=0x7f04003e;
+        public static final int login_progress_signing_in=0x7f04003f;
         public static final int new_observation=0x7f040023;
         public static final int next=0x7f040038;
         /**  Strings related to login 
@@ -737,16 +738,16 @@ containing a value of this type.
         public static final int prompt_name=0x7f040037;
         public static final int prompt_password=0x7f040035;
         public static final int prompt_username=0x7f040036;
-        public static final int sign_progress_signing_up=0x7f04003f;
-        public static final int step1=0x7f040048;
-        public static final int step2=0x7f040049;
-        public static final int step2_q1=0x7f04004a;
-        public static final int step2_q2=0x7f04004b;
-        public static final int step2_q3=0x7f04004c;
-        public static final int step2_q4=0x7f04004d;
+        public static final int sign_progress_signing_up=0x7f040040;
+        public static final int step1=0x7f040049;
+        public static final int step2=0x7f04004a;
+        public static final int step2_q1=0x7f04004b;
+        public static final int step2_q2=0x7f04004c;
+        public static final int step2_q3=0x7f04004d;
+        public static final int step2_q4=0x7f04004e;
         public static final int submit=0x7f040026;
         public static final int title_activity_add_observation=0x7f040024;
-        public static final int title_activity_consent=0x7f04004e;
+        public static final int title_activity_consent=0x7f04004f;
         public static final int title_activity_edit_observation=0x7f04002a;
         public static final int title_activity_login=0x7f040033;
         public static final int title_activity_main_activity1=0x7f040028;

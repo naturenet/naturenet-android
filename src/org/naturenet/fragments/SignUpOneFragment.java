@@ -2,10 +2,12 @@ package org.naturenet.fragments;
 
 import org.naturenet.activities.R;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -13,10 +15,17 @@ import android.view.inputmethod.InputMethodManager;
 import org.naturenet.activities.LoginActivity;
 
 public class SignUpOneFragment extends Fragment {
+    public static final String TAG = SignUpOneFragment.class.getName();
+
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
-	((LoginActivity) getActivity()).setActionBarTitle("Sign Up Step 1");
+	ActionBar actionBar = getActivity().getActionBar();
+	actionBar.setTitle("Sign Up Step:About the project");
+	actionBar.setDisplayHomeAsUpEnabled(true);
+	setHasOptionsMenu(true);
+	
 	View rootView = inflater.inflate(R.layout.fragment_signup_1, container,
 		false);
 	rootView.findViewById(R.id.step1_next_button).setOnClickListener(
@@ -25,7 +34,7 @@ public class SignUpOneFragment extends Fragment {
 		    public void onClick(View view) {
 			SignUpTwoFragment newFragment = new SignUpTwoFragment();
 			((LoginActivity) getActivity()).replaceFragment(
-				newFragment, R.id.fragment_container_login);
+				newFragment, R.id.fragment_container_login, SignUpTwoFragment.TAG);
 		    }
 		});
 	return rootView;
@@ -40,4 +49,14 @@ public class SignUpOneFragment extends Fragment {
 	imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+	switch (item.getItemId()) {
+	case android.R.id.home:
+	    getActivity().getSupportFragmentManager().popBackStack();
+	    return true;
+	default:
+	    return super.onOptionsItemSelected(item);
+	}
+    }
 }

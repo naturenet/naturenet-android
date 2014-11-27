@@ -12,7 +12,6 @@ import org.naturenet.fragments.ActivitiesFragment;
 import org.naturenet.fragments.ObservationFragment.NoteImage;
 import org.naturenet.fragments.TourFragment;
 import org.naturenet.fragments.ObservationFragment;
-import org.naturenet.helper.InitialDownloadTask;
 import org.naturenet.model.Session;
 
 import android.app.AlertDialog;
@@ -35,8 +34,7 @@ import android.widget.RelativeLayout;
 public class MainActivity extends FragmentActivity implements HomeFragment.OnPassAccount,
 	ObservationFragment.OnDataPassListener, TourFragment.OnDataPassListener,
 	ActivitiesFragment.onActivityPassListener, ActivityFragment.OnActivityIdPassListener,
-	AddObservationFragment.onPassNewObservationListener,
-	FragmentManager.OnBackStackChangedListener {
+	AddObservationFragment.onPassNewObservationListener {
     private String mCurrentPhotoPath;    
     private Menu actionbarMenu;
     private Uri       fileUri;		  // file url for image file path
@@ -66,7 +64,6 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 		.commit();
 	}
 	fragmentManager = getSupportFragmentManager();
-	fragmentManager.addOnBackStackChangedListener(this);
     }
 
     @Override
@@ -89,7 +86,6 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 	    case R.id.action_settings:
 		if (item.getTitle().equals(SIGNOUT)) {
 		    showLogOutAlert();
-		    item.setTitle(SIGNIN);
 		} else {
 		    HomeFragment hFragment = (HomeFragment) fragmentManager
 			    	.findFragmentByTag(HomeFragment.TAG);
@@ -128,11 +124,6 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 	}
     }
     
-    @Override
-    public void onBackStackChanged() {
-
-    }
-    
     /* sign out alert */
     public void showLogOutAlert() {
 	AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
@@ -151,6 +142,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 		    }
 		}
 		homeFragment.showSignInBtn();
+		setOptionTitle(R.id.action_settings, SIGNIN);
 	    }
 	});
 	alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
