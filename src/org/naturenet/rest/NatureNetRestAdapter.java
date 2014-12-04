@@ -43,7 +43,7 @@ public class NatureNetRestAdapter {
 		.registerTypeAdapter(Date.class, new DateTypeAdapter()).create();
 
 	RestAdapter restAdapter = new RestAdapter.Builder().setConverter(new GsonConverter(gson))
-		.setEndpoint("http://naturenet-dev.herokuapp.com/api")
+		.setEndpoint("http://naturenet.herokuapp.com/api")
 		.setErrorHandler(new MyErrorHandler()).build();
 	return restAdapter.create(NatureNetAPI.class);
     }
