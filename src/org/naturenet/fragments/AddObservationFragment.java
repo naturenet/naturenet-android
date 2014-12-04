@@ -48,6 +48,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class AddObservationFragment extends Fragment {
     /* UI elements */
@@ -120,7 +121,7 @@ public class AddObservationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {	
 	rootView = inflater.inflate(R.layout.fragment_edit_obs, container, false);
 	imgPreview = (ImageView) rootView.findViewById(R.id.preview_observation);
-//	categorySpinner = (Spinner) rootView.findViewById(R.id.spinner_obs_category);
+	// categorySpinner = (Spinner) rootView.findViewById(R.id.spinner_obs_category);
 	locationSpinner = (Spinner) rootView.findViewById(R.id.spinner_obs_location);
 	activitySpinner = (Spinner) rootView.findViewById(R.id.spinner_obs_activity);
 	etDescription = (EditText) rootView.findViewById(R.id.et_edit_description);
@@ -157,6 +158,7 @@ public class AddObservationFragment extends Fragment {
 	getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 	setHasOptionsMenu(true);
 	initModel();
+	// handle data from arguments
 	if (getArguments() != null) {
 	    if (getArguments().getLong(NOTE_ID) != 0) {
 		Long note_id = getArguments().getLong(NOTE_ID);
@@ -192,7 +194,7 @@ public class AddObservationFragment extends Fragment {
 	    previewCapturedImage();
 	} else {
 	    mNote = new Note();
-	    Log.d(TAG, "error, no arugments passed to here!");
+	    // Log.d(TAG, "error, no arugments passed to here!");
 	}
 
 	// set spinners after mNote is initialized 
@@ -206,15 +208,18 @@ public class AddObservationFragment extends Fragment {
 	super.onResume();
 	LocationHelper locationHelper = new LocationHelper(locationMngr, new Handler(),
 		this.getActivity());
-	if (!locationMngr.isProviderEnabled(LocationManager.GPS_PROVIDER)
-		|| !locationMngr.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+	if (!locationMngr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 	    locationHelper.showSettingsAlert();
 	}  else {
-	    geoInfo = locationHelper.getCurrentLocation(40);
+	    geoInfo = locationHelper.getCurrentLocation(50);
 	    checkNotNull(landmarks);
-	    checkNotNull(geoInfo);
-	    currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(),
-		    geoInfo.getLongitude());
+	    try {
+		checkNotNull(geoInfo);
+		currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(),
+			    geoInfo.getLongitude());
+	    } catch (Exception e) {
+		 Toast.makeText(this.getActivity(), "waiting for location", Toast.LENGTH_SHORT).show();
+	    }
 	    landmarkSpinnerPosition = getPositionByName(currGPSLandmarkName, landmarks);
 	}
 	if (mNote == null) {
@@ -256,9 +261,8 @@ public class AddObservationFragment extends Fragment {
 
     /* Display image from a path to ImageView */
     private void previewCapturedImage() {
-//	Picasso.with(getActivity()).load(mCurrentPhotoPath).resize(800, 600).centerCrop()
-//		.placeholder(R.drawable.loading).into(imgPreview);
 	RequestCreator picRequstor = Picasso.with(getActivity()).load(mCurrentPhotoPath)
+					//.fit();
 					.resize(800, 600).centerCrop();
 	picRequstor.placeholder(R.drawable.loading).into(imgPreview,  new Callback() {
             @Override
@@ -349,6 +353,7 @@ public class AddObservationFragment extends Fragment {
 	}
     }
     
+    /* cancel button */
     private void cancelEdit() {
 	FragmentManager fm = getActivity().getSupportFragmentManager();
 	fm.popBackStack();
@@ -383,10 +388,8 @@ public class AddObservationFragment extends Fragment {
 	    public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
 		    int position, long id) {
 		checkNotNull(landmarks.get(position));
-            //	Log.d("debug", "landmark name: " + landmarks.get(position).getTitle());
 		context_landmark_id = landmarks.get(position).getId();
 		landmarkContext = landmarks.get(position);
-            //	Log.d("debug", "landmark id: " + landmarks.get(position).getId());
 	    }
 
 	    @Override
@@ -410,16 +413,16 @@ public class AddObservationFragment extends Fragment {
 	    activitySpinner.setSelection(position);
 	} else {
 	    activitySpinner.setSelection(activitySpinnerPosition);
-	    Log.d("debug", "user selected acitivity: " + activitySpinnerPosition);
+	    // Log.d("debug", "user selected acitivity: " + activitySpinnerPosition);
 	}
 	activitySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 	    @Override
 	    public void onItemSelected(AdapterView<?> parentView, View selectedItemView,
 		    int position, long id) {
 		checkNotNull(activities.get(position));
-		Log.d("debug", "context id: " + activities.get(position).getTitle());
+		// Log.d("debug", "context id: " + activities.get(position).getTitle());
 		context_activity_id = activities.get(position).getId();
-		Log.d("debug", "context id: " + context_activity_id);
+		// Log.d("debug", "context id: " + context_activity_id);
 	    }
 
 	    @Override
@@ -466,7 +469,7 @@ public class AddObservationFragment extends Fragment {
 	return (null != attribute ? attribute : "");
     }
 
-    /* determine gps location by photo */
+    /* determine gps location by photo not used */
     public void getPhotoInfo(String mCurrentPhotoPath) {
 	ExifInterface exif = null;
 	try {
@@ -516,9 +519,7 @@ public class AddObservationFragment extends Fragment {
 		break;
 	    }
 	    Double landmarkLat = (Double) loc.getExtras().get("latitude");
-//	    Log.d("debug", "landmark latitude: " + loc.getExtras().get("latitude"));
 	    Double landmarkLon = (Double) loc.getExtras().get("longitude");
-//	    Log.d("debug", "landmark longitude: " + loc.getExtras().get("longitude"));
 	    if (Math.abs(landmarkLat - latitude) < latError 
 		    && Math.abs(landmarkLon - longitude) < lonError) {
 			name = loc.getName();
@@ -526,7 +527,7 @@ public class AddObservationFragment extends Fragment {
 	    index++;
 	}
     
-	Log.d("debug", "landmark you are at is : " + name);
+	// Log.d("debug", "landmark you are at is : " + name);
 	return name;
     }
 

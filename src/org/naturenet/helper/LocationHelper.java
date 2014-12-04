@@ -61,13 +61,11 @@ public class LocationHelper {
 	    if (isGPSEnabled) {
 		locationManager
 		    .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListner);
-		Log.d("mylocation", "get location from GPS " + isGPSEnabled);
 	    }
 		
 	    if (isNetworkEnabled) {
 		locationManager
 			.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListner);
-		Log.d("mylocation", "get location from Network " + isNetworkEnabled);
 	    }
 
 	    handler.postDelayed(doAfterTimeExpires, maxWaitSeconds * 1000);
@@ -79,11 +77,12 @@ public class LocationHelper {
     public Location getLastLocation(boolean isGPSEanabled, boolean isNetworkEnabled) {
 	Location gpsLastLocation = null;
 	Location networkLastLocation = null;
-	if (isNetworkEnabled) {
-	    networkLastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-	}
+
 	if (isGPSEanabled) {
 	    gpsLastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+	}
+	if (isNetworkEnabled) {
+	    networkLastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 	}
 	
 	if (networkLastLocation != null && gpsLastLocation != null) {
@@ -94,12 +93,12 @@ public class LocationHelper {
 	    }
 	}
 	
-	if (networkLastLocation != null) {
-	    return networkLastLocation;
-	}
-	
 	if (gpsLastLocation != null) {
 	    return gpsLastLocation;
+	}
+	
+	if (networkLastLocation != null) {
+	    return networkLastLocation;
 	}
 	
 	return null;
