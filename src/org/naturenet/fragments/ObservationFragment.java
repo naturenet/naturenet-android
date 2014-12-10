@@ -286,7 +286,7 @@ public class ObservationFragment extends Fragment {
 	public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
 		long note_id = images.get(position).getNoteId();
 		Log.d("debug", "touched image's note id is: " + note_id);
-		dataPasser.onDataPass(note_id);
+		dataPasser.onNoteIdPass(note_id);
 	}
     }
     
@@ -351,6 +351,6 @@ public class ObservationFragment extends Fragment {
     
     /* interface for passing data to mainActivity and other fragment */
     public interface OnDataPassListener {
-	public void onDataPass(long note_id);
+	public void onNoteIdPass(long note_id);
     }
 }

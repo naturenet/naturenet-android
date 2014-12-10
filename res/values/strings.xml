@@ -4,7 +4,7 @@
     <string name="app_name">NatureNet</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="new_observation">Take a new observation</string>
+    <string name="new_observation">Make a new observation</string>
     <string name="title_activity_add_observation">AddObservationActivity</string>
     <string name="add_description">Add Description</string>
     <string name="submit">Submit</string>

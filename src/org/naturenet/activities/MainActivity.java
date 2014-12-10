@@ -170,7 +170,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     
     /* Receiving data from ObservationFragment */
     @Override
-    public void onDataPass(long note_id) {
+    public void onNoteIdPass(long note_id) {
 	AddObservationFragment nFragment = AddObservationFragment.newInstance();
 	Bundle b = new Bundle();
 	b.putLong(AddObservationFragment.NOTE_ID, note_id);

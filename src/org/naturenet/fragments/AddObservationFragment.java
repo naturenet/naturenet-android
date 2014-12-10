@@ -232,7 +232,7 @@ public class AddObservationFragment extends Fragment {
 	super.onStop();
 	if (mNote != null) {
 	    DataSyncTask mSyncTask = null;
-	    if (noteImage == null) {
+	    if (noteImage == null) { 
 		mSyncTask = new DataSyncTask(mAccount, mNote, DataSyncTask.SYNC_NOTE);
 	    } else {
 		mSyncTask = new DataSyncTask(mAccount, mNote, noteImage, 
@@ -506,20 +506,22 @@ public class AddObservationFragment extends Fragment {
     }
     
     /* get location name based on current location */
-    public String getAccurateLocationName(Double latitude, Double longitude) {
+    private String getAccurateLocationName(Double latitude, Double longitude) {
 	Double latError = 0.0001;
 	Double lonError = 0.0001;
 	String name = null;
 	
 	int index = 0;
 	for (org.naturenet.model.Context loc : landmarks) {
-	    // doing this because other has no geo info
-	    if (index == 11) {
+	    // doing this because location "other" has no geo info
+	    if (index == (landmarks.size() - 1)) {
 		name = loc.getName();
 		break;
 	    }
 	    Double landmarkLat = (Double) loc.getExtras().get("latitude");
 	    Double landmarkLon = (Double) loc.getExtras().get("longitude");
+	    Log.d("mylocation", loc.getName() + "'s " + " lat is: " + landmarkLat 
+		    + " lon is: " + landmarkLon);
 	    if (Math.abs(landmarkLat - latitude) < latError 
 		    && Math.abs(landmarkLon - longitude) < lonError) {
 			name = loc.getName();
@@ -529,6 +531,15 @@ public class AddObservationFragment extends Fragment {
     
 	// Log.d("debug", "landmark you are at is : " + name);
 	return name;
+    }
+    
+    /* determine whethe a location is park or not */
+    private boolean isInPark(Double latitude, Double longitude) {
+	if (latitude < -106.817096 && latitude > -106.824174
+		&& longitude > 39.19324 && longitude < 39.199129) {
+	    return true;
+	} 
+	return false;
     }
 
     /* receive data from MainActivity, passed from ObservationFragment */
