@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.naturenet.fragments.ActivityFragment;
 import org.naturenet.fragments.AddObservationFragment;
+import org.naturenet.fragments.DesignIdeasFragment;
 import org.naturenet.fragments.HomeFragment;
 import org.naturenet.fragments.ActivitiesFragment;
 import org.naturenet.fragments.ObservationFragment.NoteImage;
@@ -127,9 +128,9 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     /* sign out alert */
     public void showLogOutAlert() {
 	AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-	alertDialog.setTitle("Confirm Sign Out...");
-	alertDialog.setMessage("Are you sure you want to Sign Out?");
-	alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+	alertDialog.setTitle("Before you go...");
+	alertDialog.setMessage("Would you like to contribute an idea to make NatureNet better?");
+	alertDialog.setPositiveButton("Sign Out", new DialogInterface.OnClickListener() {
 	    public void onClick(DialogInterface dialog, int which) {
 		Session.signOut();
 		HomeFragment homeFragment = (HomeFragment) fragmentManager
@@ -145,9 +146,17 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 		setOptionTitle(R.id.action_settings, SIGNIN);
 	    }
 	});
-	alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+	alertDialog.setNegativeButton("DesignIdea", new DialogInterface.OnClickListener() {
 	    public void onClick(DialogInterface dialog, int which) {
 		dialog.cancel();
+		DesignIdeasFragment dFragment = (DesignIdeasFragment) fragmentManager
+			.findFragmentByTag(DesignIdeasFragment.TAG);
+		if (dFragment != null) {
+		    fragmentManager.popBackStack(DesignIdeasFragment.TAG, 0);
+		} else {
+		    dFragment = DesignIdeasFragment.newInstance();
+		    replaceFragment(dFragment, R.id.main_container, DesignIdeasFragment.TAG);
+		}
 	    }
 	});
 	alertDialog.show();

@@ -157,7 +157,7 @@ public class DesignIdeasFragment extends Fragment {
 	ideaNote.setLatitude(null);
 	ideaNote.setContent(idea);
 	List<org.naturenet.model.Context> ideasContexts = mSite.getContextIdeas();
-	Log.d(TAG, "ideacontexts" + ideasContexts.get(0).toString());
+	// Log.d(TAG, "ideacontexts" + ideasContexts.get(0).toString());
 	ideaNote.setContext(ideasContexts.get(0));
 	ideaNote.commit();
 	DataSyncTask mSyncTask = new DataSyncTask(ideaNote, DataSyncTask.SYNC_DESIGNIDEA);

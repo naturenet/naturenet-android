@@ -105,9 +105,15 @@ public class AddObservationFragment extends Fragment {
 	landmarks = mSite.getLandmarks();
 	checkNotNull(landmarks);
 	activities = mSite.getActivities();
-	// this way requires "free observation" is always on the last one
-	// doing this is to place "free observation" to be on the top
-	activitySpinnerPosition = activities.size() - 1;
+	// set up the default acitvity selection to be "Free Observation"
+	int index = 0;
+	for (org.naturenet.model.Context activity : activities) {
+	    if (activity.getTitle().equals("Free Observation")) {
+		activitySpinnerPosition = index;
+		break;
+	    }
+	    index++;
+	}
 	checkNotNull(activities);
     }
     
@@ -193,7 +199,7 @@ public class AddObservationFragment extends Fragment {
 		
 	    previewCapturedImage();
 	} else {
-	    mNote = new Note();
+	     mNote = new Note();
 	    // Log.d(TAG, "error, no arugments passed to here!");
 	}
 
@@ -340,6 +346,7 @@ public class AddObservationFragment extends Fragment {
     /* process data after press submit */
     private void dispathSubmit() {
 	createObservation();
+	Toast.makeText(getActivity(), "Thank you very much for your contribution!", Toast.LENGTH_SHORT).show();
 	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
 		Context.INPUT_METHOD_SERVICE);
 	imm.hideSoftInputFromWindow(etDescription.getWindowToken(), 0);
@@ -510,7 +517,7 @@ public class AddObservationFragment extends Fragment {
 	Double latError = 0.0001;
 	Double lonError = 0.0001;
 	String name = null;
-	
+	// Log.d("mylocation", "Your current location lat is: "+ latitude);
 	int index = 0;
 	for (org.naturenet.model.Context loc : landmarks) {
 	    // doing this because location "other" has no geo info
@@ -520,11 +527,13 @@ public class AddObservationFragment extends Fragment {
 	    }
 	    Double landmarkLat = (Double) loc.getExtras().get("latitude");
 	    Double landmarkLon = (Double) loc.getExtras().get("longitude");
-	    Log.d("mylocation", loc.getName() + "'s " + " lat is: " + landmarkLat 
+	    Log.d("mylocation", loc.getName() + " 's " + " lat is: " + landmarkLat 
 		    + " lon is: " + landmarkLon);
 	    if (Math.abs(landmarkLat - latitude) < latError 
 		    && Math.abs(landmarkLon - longitude) < lonError) {
 			name = loc.getName();
+			// Log.d("mylocation","You're at: " + loc.getName());
+			break;
 	    }
 	    index++;
 	}

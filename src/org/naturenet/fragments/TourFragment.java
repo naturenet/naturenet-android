@@ -62,7 +62,7 @@ public class TourFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	Log.d("debug", "tour fragment now in onCreateView!");
+	// Log.d("debug", "tour fragment now in onCreateView!");
 	View rootView = (LinearLayout) inflater.inflate(R.layout.fragment_tour, container, false);
 	ivTakeObs = (ImageView) rootView.findViewById(R.id.cam_in_tour);
 	locationMngr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -94,7 +94,7 @@ public class TourFragment extends Fragment {
     
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-	Log.d("debug", "tour fragment now in onViewCreated!");
+	// Log.d("debug", "tour fragment now in onViewCreated!");
 	if (mMap != null) {
 	    setUpMap();
 	}
@@ -111,7 +111,7 @@ public class TourFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-	Log.d("debug", "tour fragment now in onDestroyView!");
+	// Log.d("debug", "tour fragment now in onDestroyView!");
 	Fragment mFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
 	if (mFragment.isResumed()) {
 	    getActivity().getSupportFragmentManager().beginTransaction().remove(mFragment).commit();
@@ -127,7 +127,7 @@ public class TourFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-	Log.d("debug", "tour fragment now in onDestroy of fragment!");
+	// Log.d("debug", "tour fragment now in onDestroy of fragment!");
 	Fragment mFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
 	FragmentTransaction transaction = getActivity().getSupportFragmentManager()
 		.beginTransaction();

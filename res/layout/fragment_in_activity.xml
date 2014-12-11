@@ -22,7 +22,7 @@
         android:layout_marginBottom="5dp"
         android:gravity="center"
         android:padding="1dp"
-        android:text="Take a new observation in this activity" />
+        android:text="Make a new observation for this activity" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"

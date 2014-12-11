@@ -66,8 +66,10 @@ public class ActivityFragment extends Fragment {
 	}
 
 	ImageView ivActivity = (ImageView) rootView.findViewById(R.id.imageView_activity);
-	Picasso.with(getActivity()).load(imageLink).resize(200, 200).centerCrop()
+	if (imageLink != null && imageLink.length() != 0) {
+	    Picasso.with(getActivity()).load(imageLink).resize(200, 200).centerCrop()
 			.placeholder(R.drawable.loading).into(ivActivity);
+	}
 	TextView tv_description = (TextView) rootView.findViewById(R.id.observation_about);
 	tv_description.setText(description);
 	TextView tv_title = (TextView) rootView.findViewById(R.id.textview_activity_title);
@@ -93,7 +95,7 @@ public class ActivityFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 	switch (item.getItemId()) {
 	    case android.R.id.home:
-		Log.d("debug", "home up pressed in activities fragment!");
+		// Log.d("debug", "home up pressed in activities fragment!");
 		FragmentManager fm = getActivity().getSupportFragmentManager();
 		fm.popBackStack();
 	        return true;
