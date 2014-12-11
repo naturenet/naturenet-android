@@ -254,11 +254,11 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 		Bundle bundle = new Bundle();		
 		bundle.putString(AddObservationFragment.IMAGE_CAPTURE_PATH, mCurrentPhotoPath);
 		if (this.selectLocation != null) {
-		    Log.d("debug", "user selected in MainActivity: " + this.selectLocation);
+		    // Log.d("debug", "user selected in MainActivity: " + this.selectLocation);
 		    bundle.putString(AddObservationFragment.LANDMARKNAME, selectLocation);
 		}
 		if (this.selectActivity != null) {
-		    Log.d("debug", "user selected in MainActivity: " + this.selectActivity);
+		    // Log.d("debug", "user selected in MainActivity: " + this.selectActivity);
 		    bundle.putString(AddObservationFragment.ACTIVITYNAME, this.selectActivity);
 		}
 		nFragment.setArguments(bundle);

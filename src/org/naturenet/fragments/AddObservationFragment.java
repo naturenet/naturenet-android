@@ -376,7 +376,7 @@ public class AddObservationFragment extends Fragment {
 	// if the landmark is selected from activity or updated by gps, set the location to gps one 
 	if (landmarkSpinnerPosition != 0) {
 	    position = landmarkSpinnerPosition;
-	    Log.d("debug", "user selected: " + landmarkSpinnerPosition);
+	    // Log.d("debug", "user selected: " + landmarkSpinnerPosition);
 	}
 	
 	// if there is note, it is in "edit" mode, the position should be the landmark data from database
@@ -527,8 +527,7 @@ public class AddObservationFragment extends Fragment {
 	    }
 	    Double landmarkLat = (Double) loc.getExtras().get("latitude");
 	    Double landmarkLon = (Double) loc.getExtras().get("longitude");
-	    Log.d("mylocation", loc.getName() + " 's " + " lat is: " + landmarkLat 
-		    + " lon is: " + landmarkLon);
+	    // Log.d("mylocation", loc.getName() + " 's " + " lat is: " + landmarkLat + " lon is: " + landmarkLon);
 	    if (Math.abs(landmarkLat - latitude) < latError 
 		    && Math.abs(landmarkLon - longitude) < lonError) {
 			name = loc.getName();
@@ -538,19 +537,9 @@ public class AddObservationFragment extends Fragment {
 	    index++;
 	}
     
-	// Log.d("debug", "landmark you are at is : " + name);
 	return name;
     }
     
-    /* determine whethe a location is park or not */
-    private boolean isInPark(Double latitude, Double longitude) {
-	if (latitude < -106.817096 && latitude > -106.824174
-		&& longitude > 39.19324 && longitude < 39.199129) {
-	    return true;
-	} 
-	return false;
-    }
-
     /* receive data from MainActivity, passed from ObservationFragment */
     public void setNoteFromObservation(long id) {
 	mNote = Model.load(Note.class, id);

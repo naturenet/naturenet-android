@@ -20,6 +20,14 @@ public class Location {
 		this.description = description;
 		this.icon = icon;
 	}
+	
+	public Location(Double lat, Double lon, String title, String description, int icon) {
+		this.latitude = lat;
+		this.longitude = lon;
+		this.title = title;
+		this.description = description;
+		this.icon = icon;
+	}
 
 	public MarkerOptions toMarkerPosition() {
 		LatLng latlng = new LatLng(this.latitude, this.longitude);

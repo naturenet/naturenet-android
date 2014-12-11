@@ -66,8 +66,6 @@ public class TourFragment extends Fragment {
 	View rootView = (LinearLayout) inflater.inflate(R.layout.fragment_tour, container, false);
 	ivTakeObs = (ImageView) rootView.findViewById(R.id.cam_in_tour);
 	locationMngr = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//	tvDescription = (TextView) rootView.findViewById(R.id.locdescription);
-//	tvDescription.setMovementMethod(new ScrollingMovementMethod());
 	initMapView();
 	setUpMapIfNeeded();
 	getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -143,7 +141,6 @@ public class TourFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Set title
         getActivity().getActionBar()
             .setTitle(R.string.title_fragment_tour);
     }
@@ -162,8 +159,7 @@ public class TourFragment extends Fragment {
     
     /* Sets up the map if it is possible to do so */
     public void setUpMapIfNeeded() {
-	// Do a null check to confirm that we have not already instantiated the
-	// map.
+	// Do a null check to confirm that we have not already instantiated the map.
 	if (mMap == null) {
 	    // Try to obtain the map from the SupportMapFragment.
 	    mMap = ((SupportMapFragment) getActivity().getSupportFragmentManager()
@@ -219,9 +215,7 @@ public class TourFragment extends Fragment {
 //		setMakerOnClick(arg0);
 		return true;
 	    }
-
 	});
-
     }
 
     /**
@@ -232,10 +226,9 @@ public class TourFragment extends Fragment {
 	checkNotNull(mSite);
 	final List<org.naturenet.model.Context> landmarks = mSite.getLandmarks();
 	String[] locTitles = getContextNames(landmarks);
-//	String[] locTitles = getResources().getStringArray(R.array.locations);
-	String[] locDescriptions = getResources().getStringArray(R.array.desciptions);
-	String[] locLats = getResources().getStringArray(R.array.latitudes);
-	String[] locLons = getResources().getStringArray(R.array.longitudes);
+	Double[] locLats = getContextLats(landmarks);
+	Double[] locLons = getContextLons(landmarks);
+	String[] locDescriptions = getContextDescription(landmarks);
 	int[] icons = {R.drawable.number1, R.drawable.number2, R.drawable.number3, R.drawable.number4,
 		R.drawable.number5, R.drawable.number6, R.drawable.number7, R.drawable.number8, 
 		R.drawable.number9, R.drawable.number10, R.drawable.number11,};
@@ -243,10 +236,10 @@ public class TourFragment extends Fragment {
 	this.locations = new ArrayList<Location>();
 	List<MarkerOptions> options = new ArrayList<MarkerOptions>();
 	for (String title : locTitles) {
-	    if (indexOfLandmark == 11) break;
+	    if (indexOfLandmark == (landmarks.size() - 1)) break;
 	    String desciption = locDescriptions[indexOfLandmark];
-	    String lat = locLats[indexOfLandmark];
-	    String lon = locLons[indexOfLandmark];
+	    Double lat = locLats[indexOfLandmark];
+	    Double lon = locLons[indexOfLandmark];
 	    int icon = icons[indexOfLandmark];
 	    Location location = new Location(lat, lon, title, desciption, icon);
 	    locations.add(location);
@@ -303,7 +296,17 @@ public class TourFragment extends Fragment {
 	}
     }
     
-    // give a list of contexts, get the name (titles) of the contexts
+    /* give a list of contexts, get the description of the contexts */
+    private String[] getContextDescription(List<org.naturenet.model.Context> contexts) {
+	List<String> contextDescriptions = new ArrayList<String>();
+	for (org.naturenet.model.Context c : contexts) {
+	    contextDescriptions.add(c.getDescription());
+	}
+	String[] simpleArray = new String[contextDescriptions.size()];
+	return contextDescriptions.toArray(simpleArray);
+    }
+    
+    /* give a list of contexts, get the latitude of the contexts */
     private String[] getContextNames(List<org.naturenet.model.Context> contexts) {
 	List<String> contextNames = new ArrayList<String>();
 	for (org.naturenet.model.Context c : contexts) {
@@ -312,7 +315,26 @@ public class TourFragment extends Fragment {
 	String[] simpleArray = new String[contextNames.size()];
 	return contextNames.toArray(simpleArray);
     }
+    
+    /* give a list of contexts, get the longitude of the contexts */
+    private Double[] getContextLats(List<org.naturenet.model.Context> contexts) {
+	List<Double> contextLats = new ArrayList<Double>();
+	for (org.naturenet.model.Context c : contexts) {
+	    contextLats.add((Double) c.getExtras().get("latitude"));
+	}
+	Double[] simpleArray = new Double[contextLats.size()];
+	return contextLats.toArray(simpleArray);
+    }
 
+    /* give a list of contexts, get the name (titles) of the contexts */
+    private Double[] getContextLons(List<org.naturenet.model.Context> contexts) {
+	List<Double> contextLons = new ArrayList<Double>();
+	for (org.naturenet.model.Context c : contexts) {
+	    contextLons.add((Double) c.getExtras().get("longitude"));
+	}
+	Double[] simpleArray = new Double[contextLons.size()];
+	return contextLons.toArray(simpleArray);
+    }
     
     /* public interface for pass data to MainActivity */
     public interface OnDataPassListener{
