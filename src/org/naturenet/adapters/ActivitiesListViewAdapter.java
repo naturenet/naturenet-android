@@ -60,7 +60,6 @@ public class ActivitiesListViewAdapter extends BaseAdapter {
 	if (imageLink != null && imageLink.length() != 0) {
 	    Picasso.with(context).load(imageLink).resize(150, 150).centerCrop().into(ivActivity);
 	} 
-//	Picasso.with(context).load(imageLink).fit().into(ivActivity);
 	return rowView;
     }
 

@@ -264,9 +264,7 @@ public class TourFragment extends Fragment {
 	return null;
     }
 
-    /**
-     * set textview to display description of each location
-     */
+    /* set textview to display description of each location */
     public void setMakerOnClick(Marker marker) {
 	String title = marker.getTitle();
 	char beginChar = title.charAt(0);

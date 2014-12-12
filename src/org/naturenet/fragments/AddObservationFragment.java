@@ -87,9 +87,9 @@ public class AddObservationFragment extends Fragment {
     private Note		mNote;
     private Media	        mMedia;
 
-    private int	landmarkSpinnerPosition = 0;
-    private int	activitySpinnerPosition;
-    private onPassNewObservationListener dataPasser;
+    private int	landmarkSpinnerDefaultPosition = 0;
+    private int	activitySpinnerDefaultPosition;
+    private onPassNewObservationListener newObservationPasser;
 
     public static AddObservationFragment newInstance() {
 	AddObservationFragment f = new AddObservationFragment();
@@ -109,7 +109,7 @@ public class AddObservationFragment extends Fragment {
 	int index = 0;
 	for (org.naturenet.model.Context activity : activities) {
 	    if (activity.getTitle().equals("Free Observation")) {
-		activitySpinnerPosition = index;
+		activitySpinnerDefaultPosition = index;
 		break;
 	    }
 	    index++;
@@ -120,7 +120,7 @@ public class AddObservationFragment extends Fragment {
     @Override
     public void onAttach(Activity a) {
 	super.onAttach(a);
-	dataPasser = (MainActivity) a;
+	newObservationPasser = (MainActivity) a;
     }
     
     @Override
@@ -164,6 +164,7 @@ public class AddObservationFragment extends Fragment {
 	getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
 	setHasOptionsMenu(true);
 	initModel();
+	
 	// handle data from arguments
 	if (getArguments() != null) {
 	    if (getArguments().getLong(NOTE_ID) != 0) {
@@ -180,27 +181,28 @@ public class AddObservationFragment extends Fragment {
 		mCurrentPhotoPath = getArguments().getString(IMAGE_CAPTURE_PATH);
 	    }
 	
-	    // if tour fragment passes location info.
+	    // if tour fragment passes location info. because location is detected by GPS,
+	    // no need to get location from user selection from ACES Tour
 	    if (getArguments().containsKey(LANDMARKNAME)) {
 		// Log.d("debug", "user selected in AddFrag: " + getArguments().getString(LANDMARKNAME));
-		String markerId = getArguments().getString(LANDMARKNAME).substring(1);
-		landmarkSpinnerPosition = Integer.valueOf(markerId);
-		//landmarkSpinnerPosition = getPositionByName(getArguments().getString(LANDMARKNAME),
+		// String markerId = getArguments().getString(LANDMARKNAME).substring(1);
+		// landmarkSpinnerPosition = Integer.valueOf(markerId);
+		// landmarkSpinnerPosition = getPositionByName(getArguments().getString(LANDMARKNAME),
 		//	mSite.getLandmarks());
 	    }
 	    
-	    // if tour fragment passes location info.
+	    // if ActivityFragment passes activity info.
 	    if (getArguments().containsKey(ACTIVITYNAME)) {
 		//Log.d("debug", "user selected acitivty from ActFrag in AddFrag: " 
 		//		+ getArguments().getString(ACTIVITYNAME));
-		activitySpinnerPosition = getPositionByName(getArguments().getString(ACTIVITYNAME),
+		activitySpinnerDefaultPosition = getPositionByName(getArguments().getString(ACTIVITYNAME),
 			mSite.getActivities());
 	    }
 		
 	    previewCapturedImage();
 	} else {
 	     mNote = new Note();
-	    // Log.d(TAG, "error, no arugments passed to here!");
+	     Log.d(TAG, "error, no arugments passed to here!");
 	}
 
 	// set spinners after mNote is initialized 
@@ -223,13 +225,13 @@ public class AddObservationFragment extends Fragment {
 		checkNotNull(geoInfo);
 		currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(),
 			    geoInfo.getLongitude());
+		landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
 	    } catch (Exception e) {
 		 Toast.makeText(this.getActivity(), "waiting for location", Toast.LENGTH_SHORT).show();
 	    }
-	    landmarkSpinnerPosition = getPositionByName(currGPSLandmarkName, landmarks);
 	}
 	if (mNote == null) {
-	    locationSpinner.setSelection(landmarkSpinnerPosition);
+	    locationSpinner.setSelection(landmarkSpinnerDefaultPosition);
 	}
     }
 
@@ -242,7 +244,7 @@ public class AddObservationFragment extends Fragment {
 		mSyncTask = new DataSyncTask(mAccount, mNote, DataSyncTask.SYNC_NOTE);
 	    } else {
 		mSyncTask = new DataSyncTask(mAccount, mNote, noteImage, 
-					dataPasser, DataSyncTask.UPDATE_NOTE);
+					newObservationPasser, DataSyncTask.UPDATE_NOTE);
 	    }
 
 	    mSyncTask.execute();
@@ -268,7 +270,6 @@ public class AddObservationFragment extends Fragment {
     /* Display image from a path to ImageView */
     private void previewCapturedImage() {
 	RequestCreator picRequstor = Picasso.with(getActivity()).load(mCurrentPhotoPath)
-					//.fit();
 					.resize(800, 600).centerCrop();
 	picRequstor.placeholder(R.drawable.loading).into(imgPreview,  new Callback() {
             @Override
@@ -312,15 +313,14 @@ public class AddObservationFragment extends Fragment {
 	mNote.setLongitude(longitude);
 	mNote.setLatitude(latitude);
 	mNote.setContent(description);
-	// Log.d("debug", "user's input is: " + description);
 	// mNote.commit();
 	
 	// mNote is null, no matter what user selected from the landmark spinner
 	// the real selection is based on current location
 	if (mNote == null) {
 	    currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(), geoInfo.getLongitude());
-	    landmarkSpinnerPosition = getPositionByName(currGPSLandmarkName, landmarks);
-	    context_landmark_id = landmarks.get(landmarkSpinnerPosition).getId();
+	    landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
+	    context_landmark_id = landmarks.get(landmarkSpinnerDefaultPosition).getId();
 	}
 
 	org.naturenet.model.Context activityContext = Model.load(org.naturenet.model.Context.class,
@@ -340,7 +340,7 @@ public class AddObservationFragment extends Fragment {
 	
 	noteImage = new NoteImage(mCurrentPhotoPath, mMedia.getTimeCreated(), mNote.getId());
 	noteImage.setNoteState(mNote.getSyncState());
-	dataPasser.onPassNewObservation(noteImage);
+	newObservationPasser.onPassNewObservation(noteImage);
     }
     
     /* process data after press submit */
@@ -374,8 +374,8 @@ public class AddObservationFragment extends Fragment {
 	locationSpinner.setAdapter(locationSpinAdpater);
 	int position = 0;
 	// if the landmark is selected from activity or updated by gps, set the location to gps one 
-	if (landmarkSpinnerPosition != 0) {
-	    position = landmarkSpinnerPosition;
+	if (landmarkSpinnerDefaultPosition != 0) {
+	    position = landmarkSpinnerDefaultPosition;
 	    // Log.d("debug", "user selected: " + landmarkSpinnerPosition);
 	}
 	
@@ -402,7 +402,6 @@ public class AddObservationFragment extends Fragment {
 	    @Override
 	    public void onNothingSelected(AdapterView<?> parentView) {
 		checkNotNull(landmarks.get(0));
-		Log.d("debug", "context id: " + landmarks.get(0).getTitle());
 		context_landmark_id = landmarks.get(0).getId();
 	    }
 	});
@@ -419,7 +418,7 @@ public class AddObservationFragment extends Fragment {
 		    mSite.getActivities());
 	    activitySpinner.setSelection(position);
 	} else {
-	    activitySpinner.setSelection(activitySpinnerPosition);
+	    activitySpinner.setSelection(activitySpinnerDefaultPosition);
 	    // Log.d("debug", "user selected acitivity: " + activitySpinnerPosition);
 	}
 	activitySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -476,7 +475,7 @@ public class AddObservationFragment extends Fragment {
 	return (null != attribute ? attribute : "");
     }
 
-    /* determine gps location by photo not used */
+    /* determine gps location by photo. Not used */
     public void getPhotoInfo(String mCurrentPhotoPath) {
 	ExifInterface exif = null;
 	try {
@@ -517,7 +516,6 @@ public class AddObservationFragment extends Fragment {
 	Double latError = 0.0001;
 	Double lonError = 0.0001;
 	String name = null;
-	// Log.d("mylocation", "Your current location lat is: "+ latitude);
 	int index = 0;
 	for (org.naturenet.model.Context loc : landmarks) {
 	    // doing this because location "other" has no geo info

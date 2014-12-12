@@ -40,7 +40,7 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     private Menu actionbarMenu;
     private Uri       fileUri;		  // file url for image file path
     private String selectLocation;   //location name from tour fragment
-    private String selectActivity;   //activity name from activity fragment
+    private String selectedActivity;   //activity name from activity fragment
     private FragmentManager fragmentManager;
 
     public final static int REQUEST_IMAGE_CAPTURE = 0;
@@ -190,11 +190,6 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     /* Receiving data from TourFragment */
     @Override
     public void onPassLocation(String markerId) {
-//	AddObservationFragment nFragment = AddObservationFragment.newInstance();
-//	Bundle b = new Bundle();
-//	b.putString(AddObservationFragment.LANDMARKNAME, name);
-//	nFragment.setArguments(b);
-//	replaceFragment(nFragment, R.id.main_container, AddObservationFragment.TAG); 
 	this.selectLocation = markerId;
     }
 
@@ -215,23 +210,22 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
     @Override
     public void onPassActivityName(String name) {
 	// Log.d("debug", "acitivty Id selected in MainActivity: " + name);
-	this.selectActivity = name;
+	this.selectedActivity = name;
     }
 
     /* Receiving data from AddObservationFragment, going to add one new image in observation fragment */
     @Override
     public void onPassNewObservation(NoteImage image) {
-	Bundle b = new Bundle();
-	b.putString(ObservationFragment.IMAGEPATH, image.getPath());
-	b.putLong(ObservationFragment.IMAGETIME, image.getTime());
-	b.putLong(ObservationFragment.IMAGENOTEID, image.getNoteId());
+	// Bundle b = new Bundle();
+	// b.putString(ObservationFragment.IMAGEPATH, image.getPath());
+	// b.putLong(ObservationFragment.IMAGETIME, image.getTime());
+	// b.putLong(ObservationFragment.IMAGENOTEID, image.getNoteId());
 	// nFragment.setArguments(b);
 	ObservationFragment obsFragment = (ObservationFragment) getSupportFragmentManager()
 				.findFragmentByTag(ObservationFragment.TAG);
 	if (obsFragment != null) {
 	    obsFragment.updataNewImage(image);
 	}
-	// replaceFragment(nFragment, R.id.main_container, ObservationFragment.TAG); 
     }
     
     /* Receiving data from AddObservationFragment, 
@@ -255,11 +249,12 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 		bundle.putString(AddObservationFragment.IMAGE_CAPTURE_PATH, mCurrentPhotoPath);
 		if (this.selectLocation != null) {
 		    // Log.d("debug", "user selected in MainActivity: " + this.selectLocation);
-		    bundle.putString(AddObservationFragment.LANDMARKNAME, selectLocation);
+		    // bundle.putString(AddObservationFragment.LANDMARKNAME, selectLocation);
 		}
-		if (this.selectActivity != null) {
+		if (this.selectedActivity != null) {
 		    // Log.d("debug", "user selected in MainActivity: " + this.selectActivity);
-		    bundle.putString(AddObservationFragment.ACTIVITYNAME, this.selectActivity);
+		    bundle.putString(AddObservationFragment.ACTIVITYNAME, this.selectedActivity);
+		    this.selectedActivity = null; // clear the selection after the selection is passed.
 		}
 		nFragment.setArguments(bundle);
 		replaceFragment(nFragment,

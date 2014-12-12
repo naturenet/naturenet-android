@@ -106,15 +106,6 @@ public class ObservationFragment extends Fragment {
 	    previewGridView.setAdapter(oAdapter);
 	}
 	
-//	previewGridView.setOnScrollListener(new EndlessScrollListener(4, 0) {
-//		@Override
-//		public void onLoadMore(int page, int totalItemsCount) {
-//
-//		   oAdapter.notifyDataSetChanged();
-//		          		    
-//		}
-//	});
-	
 	previewGridView.setOnItemClickListener(new OnClickToLaunchEditNote());
 	return rootView;
     }
@@ -178,7 +169,6 @@ public class ObservationFragment extends Fragment {
 		if (newImage.getNoteState().equals("ready to send")) {
 		    image.setNoteState(2);
 		} 
-
 		break;
 	    }
 	}
@@ -194,7 +184,6 @@ public class ObservationFragment extends Fragment {
     
     /* receiving a new state of an image from MainActivity, originally from AddObservationFragment */
     public void updateImageState (NoteImage newImage) { 
-	boolean imgExisted = false;
 	for (NoteImage image : images) {
 	    if (image.getNoteId() == newImage.getNoteId()) {
 		if (newImage.getNoteState().equals("sent")) {
@@ -203,7 +192,6 @@ public class ObservationFragment extends Fragment {
 		if (newImage.getNoteState().equals("ready to send")) {
 		    image.setNoteState(2);
 		} 
-		imgExisted = true;
 		break;
 	    }
 	}
@@ -227,7 +215,7 @@ public class ObservationFragment extends Fragment {
 	List<NoteImage> images = new ArrayList<NoteImage>();
 	checkNotNull(notes);
 	for (Note note : notes) {
-	    Log.d("debug", "note info is: " + note.toString());
+	    // Log.d("debug", "note info is: " + note.toString());
 	    Media media = note.getMediaSingle();
 	    if (media != null) {
 		String path = media.getPath();
@@ -243,8 +231,9 @@ public class ObservationFragment extends Fragment {
 	    }
 	}
 
-	if (!images.isEmpty())
+	if (!images.isEmpty()) {
 	    Collections.sort(images);
+	}
 	return images;
     }
     
@@ -290,7 +279,7 @@ public class ObservationFragment extends Fragment {
 	}
     }
     
-    /* a class for save image information in the gridview */
+    /* a class for save image information for gridview adapter */
     public static class NoteImage implements Comparable<Object> {
 	private String path;
 	private long   time;
