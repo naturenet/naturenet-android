@@ -2,12 +2,10 @@ package org.naturenet.fragments;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.naturenet.activities.MainActivity;
-import org.naturenet.activities.MyUploadService;
 import org.naturenet.activities.R;
 import org.naturenet.fragments.ObservationFragment.NoteImage;
 import org.naturenet.helper.DataSyncTask;
@@ -27,14 +25,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -95,6 +92,7 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     private int	landmarkSpinnerDefaultPosition = 0;
     private int	activitySpinnerDefaultPosition;
     private onPassNewObservationListener newObservationPasser;
+    private LocationHelper locationHelper;
 
     public static AddObservationFragment newInstance() {
 	AddObservationFragment f = new AddObservationFragment();
@@ -160,70 +158,42 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 		Long note_id = getArguments().getLong(NOTE_ID);
 		mNote = Model.load(Note.class, note_id);
 		checkNotNull(mNote);
-		// Log.d("debug", "passed noteid is " + note_id);
 		mCurrentPhotoPath = mNote.getMediaSingle().getPath();
-		if (mNote.getContent().length() > 0)
+		if (mNote.getContent().length() > 0) {
 		    etDescription.setText(mNote.getContent());
+		}
 	    }
 
 	    if (getArguments().containsKey(IMAGE_CAPTURE_PATH)) {
 		mCurrentPhotoPath = getArguments().getString(IMAGE_CAPTURE_PATH);
 	    }
-	
-	    // if tour fragment passes location info. because location is detected by GPS,
-	    // no need to get location from user selection from ACES Tour
-	    if (getArguments().containsKey(LANDMARKNAME)) {
-		// Log.d("debug", "user selected in AddFrag: " + getArguments().getString(LANDMARKNAME));
-		// String markerId = getArguments().getString(LANDMARKNAME).substring(1);
-		// landmarkSpinnerPosition = Integer.valueOf(markerId);
-		// landmarkSpinnerPosition = getPositionByName(getArguments().getString(LANDMARKNAME),
-		//	mSite.getLandmarks());
-	    }
-	    
+		    
 	    // if ActivityFragment passes activity info.
 	    if (getArguments().containsKey(ACTIVITYNAME)) {
-		//Log.d("debug", "user selected acitivty from ActFrag in AddFrag: " 
-		//		+ getArguments().getString(ACTIVITYNAME));
 		activitySpinnerDefaultPosition = getPositionByName(getArguments().getString(ACTIVITYNAME),
 			mSite.getActivities());
 	    }
-		
 	    previewCapturedImage();
-	} else {
-	     mNote = new Note();
-	     Log.d(TAG, "error, no arugments passed to here!");
-	}
+	} 
 
 	// set spinners after mNote is initialized 
 	setSpinner();
 	return rootView;
     }
     
-    /* onResume, get last current location */
+    /* onResume, request last current location */
     @Override
     public void onResume() {
 	super.onResume();
-	LocationHelper locationHelper = new LocationHelper(locationMngr, new Handler(),
-		this.getActivity(), this);
-	if (!locationMngr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-	    locationHelper.showSettingsAlert();
-	}  else {
-	    
-	    //geoInfo = locationHelper.getCurrentLocation(50);
-	    /*
-	    checkNotNull(landmarks);
-	    try {
-		checkNotNull(geoInfo);
-		currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(),
-			    geoInfo.getLongitude());
-		landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
-	    } catch (Exception e) {
-		 Toast.makeText(this.getActivity(), "waiting for location", Toast.LENGTH_SHORT).show();
-	    }*/
-	    locationHelper.requestCurrentLocation(50);
-	}
+	// detect location only if it is a new note
 	if (mNote == null) {
-	    locationSpinner.setSelection(landmarkSpinnerDefaultPosition);
+	    locationHelper = new LocationHelper(locationMngr, new Handler(), this.getActivity(),
+		    this);
+	    if (!locationMngr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+		locationHelper.showSettingsAlert();
+	    } else {
+		locationHelper.requestCurrentLocation();
+	    }
 	}
     }
 
@@ -238,7 +208,6 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 		mSyncTask = new DataSyncTask(mAccount, mNote, noteImage, 
 					newObservationPasser, DataSyncTask.UPDATE_NOTE);
 	    }
-
 	    mSyncTask.execute();
 	}
 	// dismiss loading overlay
@@ -310,47 +279,39 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     private void createObservation() {
 	Double longitude = null;
 	Double latitude = null;
-	String description = etDescription.getText().toString();
-	if (geoInfo == null || description == null || mAccount == null) {
-	    return;
-	}
 	// if there is no note passed by other fragment, create a new one
+	// a new GEO info attached to this note,
+	// if mNote != null, mNote is from an existing note, no need for new geo info.
 	if (mNote == null) {
 	    mNote = new Note();
+	    longitude = geoInfo.getLongitude();
+	    latitude = geoInfo.getLatitude();
 	}
+	
 	Account account = Model.load(Account.class, mAccount.getId());
 	mNote.setAccount(account);
 	mNote.setKind("FieldNote");
-	longitude = geoInfo.getLongitude();
-	latitude = geoInfo.getLatitude();
+	String description = etDescription.getText().toString();
 	mNote.setLongitude(longitude);
 	mNote.setLatitude(latitude);
 	mNote.setContent(description);
-	// mNote.commit();
-	
-	// mNote is null, no matter what user selected from the landmark spinner
-	// the real selection is based on current location
-	if (mNote == null) {
-	    currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(), geoInfo.getLongitude());
-	    landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
-	    context_landmark_id = landmarks.get(landmarkSpinnerDefaultPosition).getId();
-	}
-
 	org.naturenet.model.Context activityContext = Model.load(org.naturenet.model.Context.class,
 		context_activity_id);
 	mNote.setContext(activityContext);
-	mNote.commit(); // mNote must commit to be a note in database, then
-			// setLandmarkFeedback can work
+	// mNote must commit to be a note in database, then setLandmarkFeedback can work
+	mNote.commit(); 
+	
 	mMedia = new Media();
 	mMedia.setNote(mNote);
 	mMedia.setLocal(mCurrentPhotoPath);
 	mMedia.commit();
 	org.naturenet.model.Context landmarkContext = Model.load(org.naturenet.model.Context.class,
 		context_landmark_id);
-	mNote.setLandmarkFeedback(landmarkContext); // setLandmarkFeedback.requires
-						    // a note id!!!!!!
+	// setLandmarkFeedback.requires a note id!!!!!!
+	mNote.setLandmarkFeedback(landmarkContext); 
 	mNote.commit();
 	
+	// ready to pass the note image to ObservationsFragment GridView's Adapter
 	noteImage = new NoteImage(mCurrentPhotoPath, mMedia.getTimeCreated(), mNote.getId());
 	noteImage.setNoteState(mNote.getSyncState());
 	newObservationPasser.onPassNewObservation(noteImage);
@@ -358,19 +319,24 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     
     /* process data after press submit */
     private void dispathSubmit() {
-	createObservation();
-	Toast.makeText(getActivity(), "Thank you very much for your contribution!", Toast.LENGTH_SHORT).show();
+	if (geoInfo == null && mNote == null) {
+	    showNoLocationFoundAlert();
+	} else {
+	    createObservation();
+	    Toast.makeText(getActivity(), "Thank you very much for your contribution!",
+		    Toast.LENGTH_SHORT).show();
+	    FragmentManager fm = getActivity().getSupportFragmentManager();
+	    if (fm.findFragmentByTag(ObservationFragment.TAG) != null) {
+		fm.popBackStack(ObservationFragment.TAG, 0);
+	    } else {
+		ObservationFragment newFragment = ObservationFragment.newInstance();
+		((MainActivity) getActivity()).replaceFragment(newFragment, R.id.main_container,
+			ObservationFragment.TAG);
+	    }
+	}
 	InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
 		Context.INPUT_METHOD_SERVICE);
 	imm.hideSoftInputFromWindow(etDescription.getWindowToken(), 0);
-	FragmentManager fm = getActivity().getSupportFragmentManager();
-	if (fm.findFragmentByTag(ObservationFragment.TAG) != null) {
-	    fm.popBackStack(ObservationFragment.TAG, 0);
-	} else {
-	    ObservationFragment newFragment = ObservationFragment.newInstance();
-	    ((MainActivity) getActivity()).replaceFragment(newFragment,
-			 R.id.main_container, ObservationFragment.TAG);
-	}
     }
     
     /* cancel button */
@@ -389,7 +355,6 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 	// if the landmark is selected from activity or updated by gps, set the location to gps one 
 	if (landmarkSpinnerDefaultPosition != 0) {
 	    position = landmarkSpinnerDefaultPosition;
-	    // Log.d("debug", "user selected: " + landmarkSpinnerPosition);
 	}
 	
 	// if there is note, it is in "edit" mode, the position should be the landmark data from database
@@ -432,7 +397,6 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 	    activitySpinner.setSelection(position);
 	} else {
 	    activitySpinner.setSelection(activitySpinnerDefaultPosition);
-	    // Log.d("debug", "user selected acitivity: " + activitySpinnerPosition);
 	}
 	activitySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 	    @Override
@@ -448,8 +412,7 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 	    public void onNothingSelected(AdapterView<?> parentView) {
 		checkNotNull(activities.get(0));
 		context_activity_id = activities.get(0).getId();
-		Log.d("debug", "context id: " + activities.get(0).getTitle());
-		// mNote.setContext(contexts.get(0));
+		// Log.d("debug", "context id: " + activities.get(0).getTitle());
 	    }
 	});
 	// setSpinnerListener(activitySpinner, activities);
@@ -490,14 +453,13 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 	String name = null;
 	int index = 0;
 	for (org.naturenet.model.Context loc : landmarks) {
-	    // doing this because location "other" has no geo info
+	    // location "other" has no geo info
 	    if (index == (landmarks.size() - 1)) {
 		name = loc.getName();
 		break;
 	    }
 	    Double landmarkLat = (Double) loc.getExtras().get("latitude");
 	    Double landmarkLon = (Double) loc.getExtras().get("longitude");
-	    // Log.d("mylocation", loc.getName() + " 's " + " lat is: " + landmarkLat + " lon is: " + landmarkLon);
 	    if (Math.abs(landmarkLat - latitude) < latError 
 		    && Math.abs(landmarkLon - longitude) < lonError) {
 			name = loc.getName();
@@ -515,37 +477,52 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 	mNote = Model.load(Note.class, id);
     }
     
+    /* alert dialog if no location was found */
+    public void showNoLocationFoundAlert() {
+	AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+	    builder.setTitle("Location Not Found").setMessage("Would like to wait for location?")
+		    .setCancelable(true)
+		    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				locationHelper.requestCurrentLocation();
+			}
+		    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+			    cancelEdit();
+			}
+		    });
+	    AlertDialog alert = builder.create();
+	    alert.show();
+    }
+    
     /* interface for new observation listener */
     public interface onPassNewObservationListener {
 	public void onPassNewObservation(NoteImage image);
 	public void onObservationStateChange(NoteImage image);
     }
 
+    /* location was found from LocationHelper, then set geoInfo */
     @Override
     public void foundLocation(Location loc) {
-	
-	checkNotNull(landmarks);
-	try {
-	    checkNotNull(geoInfo);
-	    currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(),
-		    geoInfo.getLongitude());
-	    landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
-	} catch (Exception e) {
-	    Toast.makeText(this.getActivity(), "waiting for location", Toast.LENGTH_SHORT).show();
+	// Log.d("mylocation", "location found" + loc.toString());
+	this.geoInfo = loc;
+	currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(), geoInfo.getLongitude());
+	landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
+	// if the note is a new note, set the default selection to be based on current location
+	if (mNote == null) {
+	    locationSpinner.setSelection(landmarkSpinnerDefaultPosition);
 	}
-	Log.d("demo", "location found" + loc.toString());	
+	
 	/* Intent intent = new Intent(getActivity(), MyUploadService.class);
 	intent.putExtra("location", "Test");
 	getActivity().startService(intent); */
     }
 
-
-
     @Override
     public void locationNotFound() {
-	Log.d("demo", "location not found");
-	//locationHelper.getCurrentLocation(50);
-	
+	Log.d("mylocation", "location not found");
+	// Toast.makeText(getActivity(), "Location Not Found!", Toast.LENGTH_SHORT).show();
+	// locationHelper.requestCurrentLocation();
     }
 }
 

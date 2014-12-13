@@ -75,8 +75,8 @@ public class TourFragment extends Fragment {
 	ivTakeObs.setOnClickListener(new OnClickListener() {
 	    @Override
 	    public void onClick(View arg0) {
-		// pass maker's id now not name
-		dataPasser.onPassLocation(selectedMarkerId);
+		// pass maker's id now not name, not used
+		// dataPasser.onPassLocation(selectedMarkerId);
 		((MainActivity) getActivity()).dispatchTakePictureIntent();
 	    }
 	    

@@ -1,13 +1,9 @@
 package org.naturenet.helper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,17 +11,17 @@ import android.location.LocationProvider;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 public class LocationHelper {
     private static final int MAX_LAST_LOCATION_AGE = 30000;
+    private static final int MAX_WAIT_TIME = 20;
     private static final int LOCATION_FOUND	= 1;
     private static final int LOCATION_NOT_FOUND    = 2;
     private static final int PROVIDER_NOT_ENABLED  = 3;
     private LocationManager  locationManager;
     private Handler	  handler;
-    private Runnable	 doAfterTimeExpires;
+    private Runnable	 notifyNoLocationFound;
     private Context	  context;
     ILocationHelper mListener;
 
@@ -34,39 +30,34 @@ public class LocationHelper {
 	this.handler = handler;
 	this.context = context;
 	this.mListener = mListner;
-	this.doAfterTimeExpires = new Runnable() {
+	this.notifyNoLocationFound = new Runnable() {
 	    @Override
 	    public void run() {
 		mListener.locationNotFound();
-		//endLocationListen(null, LOCATION_NOT_FOUND);
 	    }
 	};
     }
 
-    public void requestCurrentLocation(int maxWaitSeconds) {
+    public void requestCurrentLocation() {
 	// getting GPS status
-	boolean isGPSEnabled = locationManager
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+	boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         // getting network status
-        boolean isNetworkEnabled = locationManager
-                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         Location lastLoc = getLastLocation(isGPSEnabled, isNetworkEnabled);
-        
 	if (lastLoc != null && lastLoc.getTime() >= (System.currentTimeMillis() - MAX_LAST_LOCATION_AGE)) {
 	    mListener.foundLocation(lastLoc);
-	    endLocationListen(lastLoc, LOCATION_FOUND);
+	    endLocationListener(lastLoc, LOCATION_FOUND);
 	} else {
+	    Toast.makeText(context, "waiting for location", Toast.LENGTH_SHORT).show();
 	    if (isGPSEnabled) {
-		locationManager
-		    .requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListner);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListner);
 	    }
 		
 	    if (isNetworkEnabled) {
-		locationManager
-			.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListner);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListner);
 	    }
-
-	    handler.postDelayed(doAfterTimeExpires, maxWaitSeconds * 1000);
+	    // notify no location found after MAX_WAIT_TIME
+	    handler.postDelayed(notifyNoLocationFound, MAX_WAIT_TIME * 1000);
 	}
     }
 
@@ -104,28 +95,27 @@ public class LocationHelper {
     private LocationListener locationListner = new LocationListener() {
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	    if (status == LocationProvider.OUT_OF_SERVICE) {
-		endLocationListen(null,	PROVIDER_NOT_ENABLED);
+		endLocationListener(null, PROVIDER_NOT_ENABLED);
 	    }
 	}
 
 	public void onProviderEnabled(String provider) {
-	    // Log.d("mylocation", provider);
 	}
 
 	public void onProviderDisabled(String provider) {
-	    endLocationListen(null, PROVIDER_NOT_ENABLED);
+	    endLocationListener(null, PROVIDER_NOT_ENABLED);
 	}
 
 	public void onLocationChanged(Location location) {
 	    if (location != null) {
-		endLocationListen(location, LOCATION_FOUND);
+		endLocationListener(location, LOCATION_FOUND);
 	    }
 	}
     };
     
     /* end location listener */
-    private void endLocationListen(Location location, int errorCode) {
-	handler.removeCallbacks(doAfterTimeExpires);
+    private void endLocationListener(Location location, int errorCode) {
+	handler.removeCallbacks(notifyNoLocationFound);
 	locationManager.removeUpdates(locationListner);
 	switch (errorCode) {
 	case PROVIDER_NOT_ENABLED:
@@ -144,24 +134,24 @@ public class LocationHelper {
     
     /* Function to show settings alert dialog */
     public void showSettingsAlert() {
-	Log.d("debug", "in show gps alert");
-	  AlertDialog.Builder builder = new AlertDialog.Builder(context);
-	    builder.setTitle("GPS not enabled").setMessage("Would like to enable the GPS settings")
-		    .setCancelable(true)
-		    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			    context.startActivity(i);
-			}
-		    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			    dialog.cancel();
-			}
-		    });
-	    AlertDialog alert = builder.create();
-	    alert.show();
+	AlertDialog.Builder builder = new AlertDialog.Builder(context);
+	builder.setTitle("GPS not enabled").setMessage("Would like to enable the GPS settings")
+		.setCancelable(true)
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int which) {
+			Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+			context.startActivity(i);
+		    }
+		}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int which) {
+			dialog.cancel();
+		    }
+		});
+	AlertDialog alert = builder.create();
+	alert.show();
     }
     
+    /* interface for AddObservationFragment to get currentLocation */
     public interface ILocationHelper{
 	public void foundLocation(Location loc);
 	public void locationNotFound();
