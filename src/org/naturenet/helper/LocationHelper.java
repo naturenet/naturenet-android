@@ -27,20 +27,23 @@ public class LocationHelper {
     private Handler	  handler;
     private Runnable	 doAfterTimeExpires;
     private Context	  context;
+    ILocationHelper mListener;
 
-    public LocationHelper(LocationManager locationManager, Handler handler, Context context) {
+    public LocationHelper(LocationManager locationManager, Handler handler, Context context, ILocationHelper mListner) {
 	this.locationManager = locationManager;
 	this.handler = handler;
 	this.context = context;
+	this.mListener = mListner;
 	this.doAfterTimeExpires = new Runnable() {
 	    @Override
 	    public void run() {
-		endLocationListen(null, LOCATION_NOT_FOUND);
+		mListener.locationNotFound();
+		//endLocationListen(null, LOCATION_NOT_FOUND);
 	    }
 	};
     }
 
-    public Location getCurrentLocation(int maxWaitSeconds) {
+    public void requestCurrentLocation(int maxWaitSeconds) {
 	// getting GPS status
 	boolean isGPSEnabled = locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -49,13 +52,8 @@ public class LocationHelper {
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         Location lastLoc = getLastLocation(isGPSEnabled, isNetworkEnabled);
         
-	// Define the criteria how to select the locatioin provider -> use
-	// default
-        //	Criteria criteria = new Criteria();
-        //	String provider = locationManager.getBestProvider(criteria, false);
-        //	Location lastLoc = locationManager.getLastKnownLocation(provider);
-        
 	if (lastLoc != null && lastLoc.getTime() >= (System.currentTimeMillis() - MAX_LAST_LOCATION_AGE)) {
+	    mListener.foundLocation(lastLoc);
 	    endLocationListen(lastLoc, LOCATION_FOUND);
 	} else {
 	    if (isGPSEnabled) {
@@ -70,7 +68,6 @@ public class LocationHelper {
 
 	    handler.postDelayed(doAfterTimeExpires, maxWaitSeconds * 1000);
 	}
-	return lastLoc;
     }
 
     /* get last known location by GPS or network */
@@ -112,7 +109,7 @@ public class LocationHelper {
 	}
 
 	public void onProviderEnabled(String provider) {
-	    Log.d("mylocation", provider);
+	    // Log.d("mylocation", provider);
 	}
 
 	public void onProviderDisabled(String provider) {
@@ -126,6 +123,7 @@ public class LocationHelper {
 	}
     };
     
+    /* end location listener */
     private void endLocationListen(Location location, int errorCode) {
 	handler.removeCallbacks(doAfterTimeExpires);
 	locationManager.removeUpdates(locationListner);
@@ -137,11 +135,9 @@ public class LocationHelper {
 	    Toast.makeText(context, "Unable to find location", Toast.LENGTH_SHORT).show();
 	    break;
 	case LOCATION_FOUND:
-	    // Toast.makeText(context, location.getLatitude() + "," +
-	    // location.getLongitude(),
-	    // Toast.LENGTH_SHORT).show();
-	    Log.d("mylocation", "location found! " + "lat: " + location.getLatitude() + " long: "
-		    + location.getLongitude());
+	    // Log.d("mylocation", "location found! " + "lat: " + location.getLatitude() + " long: "
+	    //    + location.getLongitude());
+	    mListener.foundLocation(location);
 	    break;
 	}
     }
@@ -165,4 +161,10 @@ public class LocationHelper {
 	    AlertDialog alert = builder.create();
 	    alert.show();
     }
+    
+    public interface ILocationHelper{
+	public void foundLocation(Location loc);
+	public void locationNotFound();
+    }
+    
 }

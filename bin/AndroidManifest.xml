@@ -3,9 +3,11 @@
     package="org.naturenet.activities"
     android:versionCode="5"
     android:versionName="1.1.3" >
+
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -14,6 +16,7 @@
     <permission
         android:name="org.naturenet.activities.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="org.naturenet.activities.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -24,20 +27,23 @@
     <!-- The following two permissions are not required to use Google Maps Android API v2, but are recommended. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<!--  adjust the name property of your application node -->
+    <!-- adjust the name property of your application node -->
     <application
         android:name="com.activeandroid.app.Application"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
         <!-- add the following metadata for version and database name -->
         <meta-data
             android:name="AA_DB_NAME"
             android:value="RestClient.db" />
-       <!--  <meta-data
+        <!--
+             <meta-data
             android:name="AA_DB_VERSION"
-            android:value="1" /> -->
+            android:value="1" />
+        -->
         <activity
             android:name="org.naturenet.activities.MainActivity"
             android:label="@string/app_name"
@@ -50,11 +56,14 @@
         </activity>
         <activity
             android:name="org.naturenet.activities.LoginActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible">
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
-            <!-- <meta-data
+            <!--
+                 <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.naturenet.activities.MainActivity" /> -->
+                android:value="org.naturenet.activities.MainActivity" />
+            -->
         </activity>
 
         <meta-data
@@ -63,7 +72,7 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyAp50sEYDWQTcpN9MOj_w0we3yFPL22ctY" />
-    
+
         <activity
             android:name="org.naturenet.activities.EditObservationActivity"
             android:label="@string/title_activity_edit_observation"
@@ -72,17 +81,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.naturenet.activities.MainActivity" />
         </activity>
-        
+
         <!-- Receive Wi-Fi connection state changes -->
-		<receiver android:name="org.naturenet.helper.WifiReceiver" >
-    		<intent-filter>
-        		<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-    		</intent-filter>
-		</receiver>
-        
+        <receiver android:name="org.naturenet.helper.WifiReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="org.naturenet.activities.MyUploadService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
     </application>
-    
-    <!-- <application
+
+    <!--
+    <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -115,6 +130,7 @@
                 android:value="org.naturenet.activities.MainActivity" />
         </activity>
        
-    </application> -->
+    </application>
+    -->
 
 </manifest>

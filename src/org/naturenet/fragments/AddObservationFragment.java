@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.naturenet.activities.MainActivity;
+import org.naturenet.activities.MyUploadService;
 import org.naturenet.activities.R;
 import org.naturenet.fragments.ObservationFragment.NoteImage;
 import org.naturenet.helper.DataSyncTask;
 import org.naturenet.helper.LocationHelper;
+import org.naturenet.helper.LocationHelper.ILocationHelper;
 import org.naturenet.model.Account;
 import org.naturenet.model.Feedback;
 import org.naturenet.model.Media;
@@ -26,11 +28,13 @@ import com.squareup.picasso.RequestCreator;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -50,7 +54,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class AddObservationFragment extends Fragment {
+public class AddObservationFragment extends Fragment implements ILocationHelper{
     /* UI elements */
     private View	       rootView;
     private EditText	   etDescription;
@@ -86,6 +90,7 @@ public class AddObservationFragment extends Fragment {
     org.naturenet.model.Context landmarkContext;
     private Note		mNote;
     private Media	        mMedia;
+   
 
     private int	landmarkSpinnerDefaultPosition = 0;
     private int	activitySpinnerDefaultPosition;
@@ -96,27 +101,11 @@ public class AddObservationFragment extends Fragment {
 	return f;
     }
 
-    /* get the account and site from current session */
-    public void initModel() {
-	mAccount = Session.getAccount();
-	checkNotNull(mAccount);
-	mSite = Session.getSite();
-	checkNotNull(mSite);
-	landmarks = mSite.getLandmarks();
-	checkNotNull(landmarks);
-	activities = mSite.getActivities();
-	// set up the default acitvity selection to be "Free Observation"
-	int index = 0;
-	for (org.naturenet.model.Context activity : activities) {
-	    if (activity.getTitle().equals("Free Observation")) {
-		activitySpinnerDefaultPosition = index;
-		break;
-	    }
-	    index++;
-	}
-	checkNotNull(activities);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);	
     }
-    
+
     @Override
     public void onAttach(Activity a) {
 	super.onAttach(a);
@@ -215,11 +204,13 @@ public class AddObservationFragment extends Fragment {
     public void onResume() {
 	super.onResume();
 	LocationHelper locationHelper = new LocationHelper(locationMngr, new Handler(),
-		this.getActivity());
+		this.getActivity(), this);
 	if (!locationMngr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 	    locationHelper.showSettingsAlert();
 	}  else {
-	    geoInfo = locationHelper.getCurrentLocation(50);
+	    
+	    //geoInfo = locationHelper.getCurrentLocation(50);
+	    /*
 	    checkNotNull(landmarks);
 	    try {
 		checkNotNull(geoInfo);
@@ -228,7 +219,8 @@ public class AddObservationFragment extends Fragment {
 		landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
 	    } catch (Exception e) {
 		 Toast.makeText(this.getActivity(), "waiting for location", Toast.LENGTH_SHORT).show();
-	    }
+	    }*/
+	    locationHelper.requestCurrentLocation(50);
 	}
 	if (mNote == null) {
 	    locationSpinner.setSelection(landmarkSpinnerDefaultPosition);
@@ -265,6 +257,27 @@ public class AddObservationFragment extends Fragment {
 	    default:
 	        return super.onOptionsItemSelected(item);
 	}
+    }
+
+    /* get the account and site from current session */
+    public void initModel() {
+        mAccount = Session.getAccount();
+        checkNotNull(mAccount);
+        mSite = Session.getSite();
+        checkNotNull(mSite);
+        landmarks = mSite.getLandmarks();
+        checkNotNull(landmarks);
+        activities = mSite.getActivities();
+        // set up the default acitvity selection to be "Free Observation"
+        int index = 0;
+        for (org.naturenet.model.Context activity : activities) {
+            if (activity.getTitle().equals("Free Observation")) {
+        	activitySpinnerDefaultPosition = index;
+        	break;
+            }
+            index++;
+        }
+        checkNotNull(activities);
     }
 
     /* Display image from a path to ImageView */
@@ -470,47 +483,6 @@ public class AddObservationFragment extends Fragment {
 	return context_names.indexOf(name);
     }
 
-    private String getExifTag(ExifInterface exif, String tag) {
-	String attribute = exif.getAttribute(tag);
-	return (null != attribute ? attribute : "");
-    }
-
-    /* determine gps location by photo. Not used */
-    public void getPhotoInfo(String mCurrentPhotoPath) {
-	ExifInterface exif = null;
-	try {
-	    exif = new ExifInterface(mCurrentPhotoPath);
-	} catch (IOException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	StringBuilder builder = new StringBuilder();
-	builder.append("Date & Time: " + getExifTag(exif, ExifInterface.TAG_DATETIME) + "\n\n");
-	builder.append("Flash: " + getExifTag(exif, ExifInterface.TAG_FLASH) + "\n");
-	builder.append("Focal Length: " + getExifTag(exif, ExifInterface.TAG_FOCAL_LENGTH) + "\n\n");
-	builder.append("GPS Datestamp: " + getExifTag(exif, ExifInterface.TAG_FLASH) + "\n");
-	builder.append("GPS Latitude: " + getExifTag(exif, ExifInterface.TAG_GPS_LATITUDE) + "\n");
-	builder.append("GPS Latitude Ref: " + getExifTag(exif, ExifInterface.TAG_GPS_LATITUDE_REF)
-		+ "\n");
-	builder.append("GPS Longitude: " + getExifTag(exif, ExifInterface.TAG_GPS_LONGITUDE) + "\n");
-	builder.append("GPS Longitude Ref: "
-		+ getExifTag(exif, ExifInterface.TAG_GPS_LONGITUDE_REF) + "\n");
-	builder.append("GPS Processing Method: "
-		+ getExifTag(exif, ExifInterface.TAG_GPS_PROCESSING_METHOD) + "\n");
-	builder.append("GPS Timestamp: " + getExifTag(exif, ExifInterface.TAG_GPS_TIMESTAMP)
-		+ "\n\n");
-	builder.append("Image Length: " + getExifTag(exif, ExifInterface.TAG_IMAGE_LENGTH) + "\n");
-	builder.append("Image Width: " + getExifTag(exif, ExifInterface.TAG_IMAGE_WIDTH) + "\n\n");
-	builder.append("Camera Make: " + getExifTag(exif, ExifInterface.TAG_MAKE) + "\n");
-	builder.append("Camera Model: " + getExifTag(exif, ExifInterface.TAG_MODEL) + "\n");
-	builder.append("Camera Orientation: " + getExifTag(exif, ExifInterface.TAG_ORIENTATION)
-		+ "\n");
-	builder.append("Camera White Balance: " + getExifTag(exif, ExifInterface.TAG_WHITE_BALANCE)
-		+ "\n");
-
-	Log.d("photo", builder.toString());
-    }
-    
     /* get location name based on current location */
     private String getAccurateLocationName(Double latitude, Double longitude) {
 	Double latError = 0.0001;
@@ -547,6 +519,33 @@ public class AddObservationFragment extends Fragment {
     public interface onPassNewObservationListener {
 	public void onPassNewObservation(NoteImage image);
 	public void onObservationStateChange(NoteImage image);
+    }
+
+    @Override
+    public void foundLocation(Location loc) {
+	
+	checkNotNull(landmarks);
+	try {
+	    checkNotNull(geoInfo);
+	    currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(),
+		    geoInfo.getLongitude());
+	    landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
+	} catch (Exception e) {
+	    Toast.makeText(this.getActivity(), "waiting for location", Toast.LENGTH_SHORT).show();
+	}
+	Log.d("demo", "location found" + loc.toString());	
+	/* Intent intent = new Intent(getActivity(), MyUploadService.class);
+	intent.putExtra("location", "Test");
+	getActivity().startService(intent); */
+    }
+
+
+
+    @Override
+    public void locationNotFound() {
+	Log.d("demo", "location not found");
+	//locationHelper.getCurrentLocation(50);
+	
     }
 }
 
