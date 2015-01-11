@@ -201,13 +201,17 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     public void onStop() {
 	super.onStop();
 	if (mNote != null) {
-	    DataSyncTask mSyncTask = null;
-	    if (noteImage == null) { 
-		mSyncTask = new DataSyncTask(mAccount, mNote, DataSyncTask.SYNC_NOTE);
-	    } else {
-		mSyncTask = new DataSyncTask(mAccount, mNote, noteImage, 
-					newObservationPasser, DataSyncTask.UPDATE_NOTE);
-	    }
+//	    DataSyncTask mSyncTask = null;
+//	    if (noteImage == null) { 
+//		Log.d("debug", "noteImage is null::");
+//		mSyncTask = new DataSyncTask(mAccount, mNote, DataSyncTask.SYNC_NOTE);
+//	    } else {
+//		Log.d("debug", "noteImage is not null::");
+//		mSyncTask = new DataSyncTask(mAccount, mNote, noteImage, 
+//					newObservationPasser, DataSyncTask.UPDATE_NOTE);
+//	    }
+	    DataSyncTask mSyncTask = new DataSyncTask(mAccount, mNote, noteImage, 
+			newObservationPasser, DataSyncTask.UPDATE_NOTE);
 	    mSyncTask.execute();
 	}
 	// dismiss loading overlay
@@ -229,7 +233,7 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     }
 
     /* get the account and site from current session */
-    public void initModel() {
+    private void initModel() {
         mAccount = Session.getAccount();
         checkNotNull(mAccount);
         mSite = Session.getSite();
@@ -320,6 +324,7 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     /* process data after press submit */
     private void dispathSubmit() {
 	if (geoInfo == null && mNote == null) {
+	    // only show alert when this is a new note(!=null) and missing a geo info
 	    showNoLocationFoundAlert();
 	} else {
 	    createObservation();
@@ -504,7 +509,7 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
     /* location was found from LocationHelper, then set geoInfo */
     @Override
     public void foundLocation(Location loc) {
-	// Log.d("mylocation", "location found" + loc.toString());
+	Log.d("mylocation", "location found" + loc.toString());
 	this.geoInfo = loc;
 	currGPSLandmarkName = getAccurateLocationName(geoInfo.getLatitude(), geoInfo.getLongitude());
 	landmarkSpinnerDefaultPosition = getPositionByName(currGPSLandmarkName, landmarks);
@@ -512,10 +517,6 @@ public class AddObservationFragment extends Fragment implements ILocationHelper{
 	if (mNote == null) {
 	    locationSpinner.setSelection(landmarkSpinnerDefaultPosition);
 	}
-	
-	/* Intent intent = new Intent(getActivity(), MyUploadService.class);
-	intent.putExtra("location", "Test");
-	getActivity().startService(intent); */
     }
 
     @Override

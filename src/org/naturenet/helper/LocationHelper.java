@@ -23,7 +23,7 @@ public class LocationHelper {
     private Handler	  handler;
     private Runnable	 notifyNoLocationFound;
     private Context	  context;
-    ILocationHelper mListener;
+    private ILocationHelper mListener;
 
     public LocationHelper(LocationManager locationManager, Handler handler, Context context, ILocationHelper mListner) {
 	this.locationManager = locationManager;
@@ -48,16 +48,15 @@ public class LocationHelper {
 	    mListener.foundLocation(lastLoc);
 	    endLocationListener(lastLoc, LOCATION_FOUND);
 	} else {
-	    Toast.makeText(context, "waiting for location", Toast.LENGTH_SHORT).show();
+	    // Toast.makeText(context, "waiting for location", Toast.LENGTH_SHORT).show();
 	    if (isGPSEnabled) {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListner);
 	    }
-		
 	    if (isNetworkEnabled) {
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListner);
 	    }
 	    // notify no location found after MAX_WAIT_TIME
-	    handler.postDelayed(notifyNoLocationFound, MAX_WAIT_TIME * 1000);
+	    handler.postDelayed(notifyNoLocationFound, MAX_WAIT_TIME * 3000);
 	}
     }
 
@@ -125,8 +124,6 @@ public class LocationHelper {
 	    Toast.makeText(context, "Unable to find location", Toast.LENGTH_SHORT).show();
 	    break;
 	case LOCATION_FOUND:
-	    // Log.d("mylocation", "location found! " + "lat: " + location.getLatitude() + " long: "
-	    //    + location.getLongitude());
 	    mListener.foundLocation(location);
 	    break;
 	}

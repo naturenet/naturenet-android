@@ -439,10 +439,11 @@ containing a value of this type.
         public static final int number7=0x7f020036;
         public static final int number8=0x7f020037;
         public static final int number9=0x7f020038;
-        public static final int powered_by_google_dark=0x7f020039;
-        public static final int powered_by_google_light=0x7f02003a;
-        public static final int profile=0x7f02003b;
-        public static final int thumb_up=0x7f02003c;
+        public static final int picture11=0x7f020039;
+        public static final int powered_by_google_dark=0x7f02003a;
+        public static final int powered_by_google_light=0x7f02003b;
+        public static final int profile=0x7f02003c;
+        public static final int thumb_up=0x7f02003d;
     }
     public static final class id {
         public static final int action_forgot_password=0x7f06007d;

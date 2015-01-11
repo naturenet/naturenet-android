@@ -122,10 +122,11 @@ int drawable number6 0x7f020035
 int drawable number7 0x7f020036
 int drawable number8 0x7f020037
 int drawable number9 0x7f020038
-int drawable powered_by_google_dark 0x7f020039
-int drawable powered_by_google_light 0x7f02003a
-int drawable profile 0x7f02003b
-int drawable thumb_up 0x7f02003c
+int drawable picture11 0x7f020039
+int drawable powered_by_google_dark 0x7f02003a
+int drawable powered_by_google_light 0x7f02003b
+int drawable profile 0x7f02003c
+int drawable thumb_up 0x7f02003d
 int id action_forgot_password 0x7f06007d
 int id action_settings 0x7f06007c
 int id activityImg_in_listview 0x7f06006d

@@ -164,10 +164,10 @@ public class ObservationFragment extends Fragment {
 	    if (image.getNoteId() == newImage.getNoteId()) {
 		imgExisted = true;
 		if (newImage.getNoteState().equals("sent")) {
-		    image.setNoteState(4);
+		    image.setNoteState(NoteImage.SENT);
 		} 
 		if (newImage.getNoteState().equals("ready to send")) {
-		    image.setNoteState(2);
+		    image.setNoteState(NoteImage.READY_TO_SEND);
 		} 
 		break;
 	    }
@@ -187,10 +187,10 @@ public class ObservationFragment extends Fragment {
 	for (NoteImage image : images) {
 	    if (image.getNoteId() == newImage.getNoteId()) {
 		if (newImage.getNoteState().equals("sent")) {
-		    image.setNoteState(4);
+		    image.setNoteState(NoteImage.SENT);
 		} 
 		if (newImage.getNoteState().equals("ready to send")) {
-		    image.setNoteState(2);
+		    image.setNoteState(NoteImage.READY_TO_SEND);
 		} 
 		break;
 	    }
@@ -285,6 +285,9 @@ public class ObservationFragment extends Fragment {
 	private long   time;
 	private long noteId;
 	private String noteState;
+	
+	public final static int READY_TO_SEND = 2;
+	public final static int SENT = 4;
 
 	public NoteImage(String path, long time, long noteId) {
 	    super();
@@ -295,10 +298,10 @@ public class ObservationFragment extends Fragment {
 
 	public void setNoteState(int state) {
 	    switch (state) {
-	    	case 2:  // SAVED
+	    	case READY_TO_SEND:  // SAVED
 	    	    this.noteState = "ready to send";
 	    	    break;
-	    	case 4: // SYNCED
+	    	case SENT: // SYNCED
 	    	    this.noteState = "sent";
 	    	    break;
 	    	default:

@@ -66,9 +66,9 @@ public class DataSyncTask extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPreExecute() {
 	if (taskType == UPDATE_NOTE) {
-	    Log.d("debug", "in datasysnc note syncstate: " + note.getSyncState());
-		image.setNoteState(2);
-		dataPasser.onObservationStateChange(image);
+	    // Log.d("debug", "in datasysnc note syncstate: " + note.getSyncState());
+	    image.setNoteState(ObservationFragment.NoteImage.READY_TO_SEND);
+	    dataPasser.onObservationStateChange(image);
 	}
     }
 
@@ -130,9 +130,8 @@ public class DataSyncTask extends AsyncTask<Void, Void, Boolean> {
 	if (taskType == UPDATE_NOTE) {
 	    if (note.getSyncState() == 4) {
 		Log.d("debug", "in datasysnc note syncstate: " + note.getSyncState());
-		image.setNoteState(4);
+		image.setNoteState(ObservationFragment.NoteImage.SENT);
 		dataPasser.onPassNewObservation(image);
-//		dataPasser.onObservationStateChange(image);
 	    }
 	}
     }

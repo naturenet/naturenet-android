@@ -1,5 +1,7 @@
 package org.naturenet.activities;
 
+import org.naturenet.helper.DataSyncTask;
+
 import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
@@ -20,11 +22,7 @@ public class MyUploadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 	// have all the code required to upload the file.
-	Log.d("demo", intent.getStringExtra("location"));
-	Toast.makeText(this, "Inside Service", Toast.LENGTH_LONG).show();
-	
-	
-	
+        new DataSyncTask(DataSyncTask.SYNC_ALL).execute();
     }
 
 }

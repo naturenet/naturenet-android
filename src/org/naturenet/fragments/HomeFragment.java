@@ -134,7 +134,6 @@ public class HomeFragment extends Fragment {
 	    showWelcome();
 	}
 	setSigninBtn();
-//	setWelcomOnClick();
 	return rootView;
     }
     
@@ -193,17 +192,6 @@ public class HomeFragment extends Fragment {
 	}
 	Intent i = new Intent(getActivity(), LoginActivity.class);
 	startActivityForResult(i, REQUEST_SELECT_ACCOUNT);
-    }
-    
-    /* set welcome message onClickListener */
-    public void setWelcomOnClick() {
-	tvWelcome.setOnClickListener(new View.OnClickListener() {   
-	    @Override
-	    public void onClick(View arg0) {
-		Session.signOut();
-		showSignInBtn();
-	    }
-	});
     }
     
     /* after login activity sends account_id back */

@@ -162,6 +162,13 @@ public class MainActivity extends FragmentActivity implements HomeFragment.OnPas
 	alertDialog.show();
     }
     
+    /* send an intent service to upload notes */
+    private void sendUploadCommand() {
+	Intent intent = new Intent(this, MyUploadService.class);
+	intent.putExtra("upload", true);
+	startService(intent);
+    }
+    
     /* Replace this fragment with next fragment */
     public void replaceFragment(Fragment fragment, int fragmentid, String tag) {
 	FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
